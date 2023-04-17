@@ -34,7 +34,7 @@ def crowdhuman2coco(odgt_path, json_path):
 
     for i in range(record_list):
         file_name = records[i]['ID'] + '.jpg'
-        img = Image.open("/gpfsscratch/rech/vlf/ues92cf/CrowdHuman/Images/" + file_name)
+        img = Image.open("/gpfsscratch/rech/vlf/ues92cf/CrowdHuman/val2017/" + file_name)
         image = {'file_name': file_name, 'height': img.size[1], 'width': img.size[0], 'id': image_id}
         json_dict['images'].append(image)
 
