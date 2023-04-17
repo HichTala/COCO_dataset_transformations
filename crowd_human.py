@@ -70,6 +70,8 @@ def crowdhuman2coco(odgt_path, json_path):
     json_fp.write(json_str)
     json_fp.close()
 
+    print("Work done!")
+
 if __name__ == '__main__':
     args = parse_command_line()
     crowdhuman2coco(args.odgt_path, args.json_path)
