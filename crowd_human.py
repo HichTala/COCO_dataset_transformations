@@ -17,11 +17,8 @@ def crowdhuman2coco(odgt_path, json_path):
     records = load_file(odgt_path)
 
     json_dict = {"images": [], "annotations": [], "categories": []}
-    START_B_BOX_ID = 1
     image_id = 1
-    bbox_id = START_B_BOX_ID
-    image = {}
-    annotations = {}
+    bbox_id = 1
     categories = {}
     record_list = len(records)
     print(record_list)
@@ -29,7 +26,7 @@ def crowdhuman2coco(odgt_path, json_path):
     for i in range(record_list):
         file_name = records[i]['ID'] + '.jpg'
         img = Image.open("" + file_name)
-        image = {'file_name': file_name, 'height': img.size[1], 'widht': img.size[0], 'id': image_id}
+        image = {'file_name': file_name, 'height': img.size[1], 'width': img.size[0], 'id': image_id}
         json_dict['images'].append(image)
 
         gt_box = records[i]['gt_boxes']
