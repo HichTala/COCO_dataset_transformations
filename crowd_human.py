@@ -3,6 +3,14 @@ import os
 
 from PIL import Image
 
+def parse_command_line():
+    parser = argparse.ArgumentParser('parser', add_help=False)
+
+    parser.add_argument('odgt_path', default='', type=str)
+    parser.add_argument('json_path', default='', type=str)
+
+    return parser.parse_args()
+
 
 def load_file(path):
     assert os.path.exists(path)
@@ -62,3 +70,6 @@ def crowdhuman2coco(odgt_path, json_path):
     json_fp.write(json_str)
     json_fp.close()
 
+if __name__ == '__main__':
+    args = parse_command_line()
+    crowdhuman2coco(args.odgt_path, args.json_path)
