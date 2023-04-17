@@ -38,7 +38,7 @@ def crowdhuman2coco(odgt_path, json_path):
         image = {'file_name': file_name, 'height': img.size[1], 'width': img.size[0], 'id': image_id}
         json_dict['images'].append(image)
 
-        gt_box = records[i]['gt_boxes']
+        gt_box = records[i]['gtboxes']
         gt_box_len = len(gt_box)
         for j in range(gt_box_len):
             category = gt_box[j]['tag']
