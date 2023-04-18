@@ -1,14 +1,18 @@
+# Original Code from https://blog.csdn.net/qq_41375609/article/details/95202218
+
 import argparse
 import json
 import os
 
 from PIL import Image
 
+
 def parse_command_line():
-    parser = argparse.ArgumentParser('parser', add_help=False)
+    parser = argparse.ArgumentParser('Convert annotations to COCO format', add_help=False)
 
     parser.add_argument('odgt_path', default='', type=str)
     parser.add_argument('json_path', default='', type=str)
+    parser.add_argument('images_path', default='', type=str)
 
     return parser.parse_args()
 
@@ -22,7 +26,7 @@ def load_file(path):
     return records
 
 
-def crowdhuman2coco(odgt_path, json_path):
+def crowdhuman2coco(odgt_path, json_path, images_path):
     records = load_file(odgt_path)
 
     json_dict = {"images": [], "annotations": [], "categories": []}
@@ -34,7 +38,7 @@ def crowdhuman2coco(odgt_path, json_path):
 
     for i in range(record_list):
         file_name = records[i]['ID'] + '.jpg'
-        img = Image.open("/gpfsscratch/rech/vlf/ues92cf/CrowdHuman/val2017/" + file_name)
+        img = Image.open(images_path + file_name)
         image = {'file_name': file_name, 'height': img.size[1], 'width': img.size[0], 'id': image_id}
         json_dict['images'].append(image)
 
@@ -61,7 +65,6 @@ def crowdhuman2coco(odgt_path, json_path):
             bbox_id += 1
         image_id += 1
 
-
     for cate, cid in categories.items():
         cat = {'supercategory': 'none', 'id': cid, 'name': cate}
         json_dict['categories'].append(cat)
@@ -73,6 +76,7 @@ def crowdhuman2coco(odgt_path, json_path):
 
     print("Work done!")
 
+
 if __name__ == '__main__':
     args = parse_command_line()
-    crowdhuman2coco(args.odgt_path, args.json_path)
+    crowdhuman2coco(args.odgt_path, args.json_path, args.images_path)
