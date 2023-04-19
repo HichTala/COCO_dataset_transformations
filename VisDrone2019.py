@@ -22,8 +22,8 @@ def visdrone2coco(root):
 
     directories = ['train', 'val', 'test-dev']
     for directory in directories:
-        image_dir = os.path.join(root, f'VisDrone2019-DET-{directory}/images')
-        anno_dir = os.path.join(root, f'VisDrone2019-DET-{directory}/annotations')
+        image_dir = os.path.join(root, f'VisDrone2019-DET-{directory}/images/')
+        anno_dir = os.path.join(root, f'VisDrone2019-DET-{directory}/annotations/')
 
         file_names = sorted(os.listdir(image_dir))
         for file_name in file_names:
