@@ -22,7 +22,7 @@ def crowdhuman2coco(root):
 
     for directory in directories:
         image_dir = os.path.join(root, 'Images/')
-        anno_path = os.path.join(root, f'annotation-{directory}.odgt')
+        anno_path = os.path.join(root, f'annotation_{directory}.odgt')
 
         anno_coco_dir, image_coco_dir = create_coco_tree(root, directory)
 
