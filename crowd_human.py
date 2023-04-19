@@ -53,8 +53,7 @@ def crowdhuman2coco(root):
             for j in range(gt_box_len):
                 category = gt_box[j]['tag']
                 if category not in categories:
-                    new_id = len(categories) + 1
-                    categories[category] = new_id
+                    categories[category] = len(categories) + 1
                 category_id = categories[category]
                 fbox = gt_box[j]['fbox']
 
