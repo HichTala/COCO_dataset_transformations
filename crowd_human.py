@@ -6,77 +6,90 @@ import os
 
 from PIL import Image
 
+from create_COCO_tree import create_coco_tree
+
 
 def parse_command_line():
     parser = argparse.ArgumentParser('Convert annotations to COCO format', add_help=False)
 
-    parser.add_argument('odgt_path', default='', type=str)
-    parser.add_argument('json_path', default='', type=str)
-    parser.add_argument('images_path', default='', type=str)
+    parser.add_argument('root', default='', type=str)
 
     return parser.parse_args()
 
 
-def load_file(path):
-    assert os.path.exists(path)
+def crowdhuman2coco(root):
+    directories = ['train', 'val']
 
-    with open(path, 'r') as file:
-        lines = file.readlines()
-    records = [json.loads(line.strip('\n')) for line in lines]
-    return records
+    for directory in directories:
+        image_dir = os.path.join(root, 'Images/')
+        anno_path = os.path.join(root, f'annotation-{directory}.odgt')
 
+        anno_coco_dir, image_coco_dir = create_coco_tree(root, directory)
 
-def crowdhuman2coco(odgt_path, json_path, images_path):
-    records = load_file(odgt_path)
+        with open(anno_path, 'r') as file:
+            lines = file.readlines()
+        records = [json.loads(line.strip('\n')) for line in lines]
 
-    json_dict = {"images": [], "annotations": [], "categories": []}
-    image_id = 1
-    bbox_id = 1
-    categories = {}
-    record_list = len(records)
-    print(record_list)
+        json_dict = {"images": [], "annotations": [], "categories": []}
+        image_id = 1
+        bbox_id = 1
+        categories = {}
+        record_list = len(records)
+        print(record_list)
 
-    for i in range(record_list):
-        file_name = records[i]['ID'] + '.jpg'
-        img = Image.open(images_path + file_name)
-        image = {'file_name': file_name, 'height': img.size[1], 'width': img.size[0], 'id': image_id}
-        json_dict['images'].append(image)
+        for i in range(record_list):
+            file_name = records[i]['ID'] + '.jpg'
+            img = Image.open(image_dir + file_name)
+            json_dict['images'].append({
+                'file_name': file_name,
+                'height': img.size[1],
+                'width': img.size[0],
+                'id': image_id
+            })
+            os.rename(image_dir + file_name, image_coco_dir + file_name)
 
-        gt_box = records[i]['gtboxes']
-        gt_box_len = len(gt_box)
-        for j in range(gt_box_len):
-            category = gt_box[j]['tag']
-            if category not in categories:
-                new_id = len(categories) + 1
-                categories[category] = new_id
-            category_id = categories[category]
-            fbox = gt_box[j]['fbox']
+            gt_box = records[i]['gtboxes']
+            gt_box_len = len(gt_box)
+            for j in range(gt_box_len):
+                category = gt_box[j]['tag']
+                if category not in categories:
+                    new_id = len(categories) + 1
+                    categories[category] = new_id
+                category_id = categories[category]
+                fbox = gt_box[j]['fbox']
 
-            ignore = 0
-            if "ignore" in gt_box[j]['head_attr']:
-                ignore = gt_box[j]['head_attr']['ignore']
-            if "ignore" in gt_box[j]['extra']:
-                ignore = gt_box[j]['extra']['ignore']
-            annotations = {'area': fbox[2] * fbox[3], 'is_crowd': ignore, 'image_id': image_id, 'bbox': fbox,
-                           'hbox': gt_box[j]['hbox'], 'vbox': gt_box[j]['vbox'], 'category_id': category_id,
-                           'id': bbox_id, 'ignore': ignore, 'segmentation': []}
-            json_dict['annotations'].append(annotations)
+                ignore = 0
+                if "ignore" in gt_box[j]['head_attr']:
+                    ignore = gt_box[j]['head_attr']['ignore']
+                if "ignore" in gt_box[j]['extra']:
+                    ignore = gt_box[j]['extra']['ignore']
 
-            bbox_id += 1
-        image_id += 1
+                json_dict['annotations'].append({
+                    "bbox": fbox,
+                    "area": fbox[2] * fbox[3],
+                    "segmentation": [],
+                    "iscrowd": ignore,
+                    "image_id": image_id,
+                    "category_id": category_id,
+                    "id": bbox_id
+                })
 
-    for cate, cid in categories.items():
-        cat = {'supercategory': 'none', 'id': cid, 'name': cate}
-        json_dict['categories'].append(cat)
+                bbox_id += 1
+            image_id += 1
 
-    json_fp = open(json_path, 'w')
-    json_str = json.dumps(json_dict)
-    json_fp.write(json_str)
-    json_fp.close()
+        for category, cid in categories.items():
+            json_dict['categories'].append({
+                'supercategory': category,
+                'id': cid,
+                'name': category
+            })
 
-    print("Work done!")
+        json_file = open(anno_coco_dir + f'instances_{directory}2017.json', 'w')
+        json_str = json.dumps(json_dict)
+        json_file.write(json_str)
+        json_file.close()
 
 
 if __name__ == '__main__':
     args = parse_command_line()
-    crowdhuman2coco(args.odgt_path, args.json_path, args.images_path)
+    crowdhuman2coco(args.root)
