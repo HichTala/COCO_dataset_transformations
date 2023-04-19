@@ -36,9 +36,9 @@ def visdrone2coco(root):
             })
 
             anno_path = os.path.join(anno_dir, os.path.splitext(file_name)[0] + '.txt')
-            with open(anno_path) as f:
+            with open(anno_path, 'r') as f:
                 annotations = f.read().split('\n')[:-1]
-            annotations = [list(map(int, annotation.split(','))) for annotation in annotations]
+            annotations = [list(map(int, annotation.split(',')[:8])) for annotation in annotations]
 
             for annotation in annotations:
                 if annotation[5] != 0 and annotation[5] != 1:
@@ -63,7 +63,7 @@ def visdrone2coco(root):
 
         if directory == 'test-dev':
             directory = directory[:4]
-        anno_coco_path = os.path.join(root, f'annotations/instances_{directory}2017.json')
+        anno_coco_path = os.path.join(root, 'annotations/')
         image_coco_path = os.path.join(root, f'{directory}2017/')
 
         if not os.path.exists(anno_coco_path):
@@ -71,7 +71,7 @@ def visdrone2coco(root):
         if not os.path.exists(image_coco_path):
             os.mkdir(image_coco_path)
 
-        json_file = open(anno_coco_path, 'w')
+        json_file = open(anno_coco_path + f'instances_{directory}2017.json', 'w')
         json_str = json.dumps(json_dict)
         json_file.write(json_str)
         json_file.close()
