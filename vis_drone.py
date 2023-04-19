@@ -4,6 +4,8 @@ import os
 
 from PIL import Image
 
+from create_COCO_tree import create_coco_tree
+
 
 def parse_command_line():
     parser = argparse.ArgumentParser('parser', add_help=False)
@@ -54,29 +56,24 @@ def visdrone2coco(root):
                     bbox_id += 1
             image_id += 1
 
-            for id, category in enumerate(categories):
+            for cid, category in enumerate(categories):
                 json_dict['categories'].append({
                     "supercategory": category,
-                    "id": id,
+                    "id": cid,
                     "name": category
                 })
 
         if directory == 'test-dev':
             directory = directory[:4]
-        anno_coco_path = os.path.join(root, 'annotations/')
-        image_coco_path = os.path.join(root, f'{directory}2017/')
 
-        if not os.path.exists(anno_coco_path):
-            os.mkdir(anno_coco_path)
-        if not os.path.exists(image_coco_path):
-            os.mkdir(image_coco_path)
+        anno_coco_dir, image_coco_dir = create_coco_tree(root, directory)
 
-        json_file = open(anno_coco_path + f'instances_{directory}2017.json', 'w')
+        json_file = open(anno_coco_dir + f'instances_{directory}2017.json', 'w')
         json_str = json.dumps(json_dict)
         json_file.write(json_str)
         json_file.close()
 
-        os.rename(image_dir, image_coco_path)
+        os.rename(image_dir, image_coco_dir)
 
 
 if __name__ == '__main__':
