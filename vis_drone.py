@@ -35,7 +35,7 @@ def visdrone2coco(root):
                 'id': image_id
             })
 
-            anno_path = os.path.join(anno_dir, os.path.splitext(file_name)[0] + 'txt')
+            anno_path = os.path.join(anno_dir, os.path.splitext(file_name)[0] + '.txt')
             with open(anno_path) as f:
                 annotations = f.read().split('\n')[:-1]
             annotations = [list(map(int, annotation.split(','))) for annotation in annotations]
