@@ -69,10 +69,13 @@ def voc2coco(root):
 
     directories = ['train', 'val', 'test']
     for directory in directories:
-        anno_list = os.path.join(root, f'ImageSets/Main/{directory}.txt')
+        anno_path_list = os.path.join(root, f'ImageSets/Main/{directory}.txt')
         anno_dir = os.path.join(root, 'Annotations')
 
         anno_coco_dir, image_coco_dir = create_coco_tree(root, directory)
+
+        with open(anno_path_list, 'r') as f:
+            anno_list = f.read().split()
 
         for annotation in anno_list:
             anno_path = os.path.join(anno_dir, annotation + ".xml")
