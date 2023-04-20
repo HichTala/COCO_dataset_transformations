@@ -17,7 +17,7 @@ def parse_command_line():
 
 
 def deep_fruits(root):
-    data_type = ['train', 'test']
+    data_type = ['train']
     for data in data_type:
         json_dict = {"images": [], "annotations": [], "categories": []}
         categories = {}
@@ -79,6 +79,8 @@ def deep_fruits(root):
         json_str = json.dumps(json_dict)
         json_file.write(json_str)
         json_file.close()
+
+        print(bbox_id)
 
 if __name__ == '__main__':
     args = parse_command_line()
