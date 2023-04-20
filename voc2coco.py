@@ -88,6 +88,9 @@ def voc2coco(root):
             else:
                 file_name = os.path.basename(path)
 
+            if file_name[-4:] != '.jpg':
+                fine_name = file_name + '.jpg'
+
             image_path = os.path.join(root, 'JPEGImages', file_name)
 
             size = annotation_root.find('size')
