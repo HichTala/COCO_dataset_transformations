@@ -82,7 +82,11 @@ def voc2coco(root):
             annotation_tree = ET.parse(anno_path)
             annotation_root = annotation_tree.getroot()
 
-            file_name = annotation_root.findtext('filename')
+            path = annotation_root.findtext('path')
+            if path is None:
+                file_name = annotation_root.findtext('filename')
+            else:
+                file_name = os.path.basename(path)
 
             image_path = os.path.join(root, 'JPEGImages', file_name)
 
