@@ -89,7 +89,7 @@ def voc2coco(root):
                 file_name = os.path.basename(path)
 
             if file_name[-4:] != '.jpg':
-                fine_name = file_name + '.jpg'
+                file_name = file_name + '.jpg'
 
             image_path = os.path.join(root, 'JPEGImages', file_name)
 
