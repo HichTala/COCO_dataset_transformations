@@ -24,6 +24,8 @@ def deep_fruits(root):
         image_id = 1
         bbox_id = 1
 
+        anno_coco_dir, image_coco_dir = create_coco_tree(root, data)
+
         for category in os.listdir(root):
             directory = os.path.join(root, category)
 
@@ -44,11 +46,15 @@ def deep_fruits(root):
                     'width': image.size[0],
                     'id': image_id
                 })
+                os.rename(image_dir + file_name, image_coco_dir + file_name)
 
                 bboxs = np.split(np.array(annotation[2:]), annotation[1])
                 for bbox in bboxs:
                     x_min, y_min, x_max, y_max = list(map(int, bbox[:4]))
                     category_id = int(bbox[4])
+
+                    if category not in categories:
+                        categories.update({category: category_id})
 
                     json_dict['annotations'].append({
                         "bbox": [x_min, y_min, x_max - x_min, y_max - y_min],
@@ -63,12 +69,16 @@ def deep_fruits(root):
                     bbox_id += 1
                 image_id += 1
 
-                json_dict['categories'].append({
-                    'supercategory': category,
-                    'id': category_id,
-                    'name': category
-                })
+            json_dict['categories'].append({
+                'supercategory': category,
+                'id': categories[category],
+                'name': category
+            })
 
+        json_file = open(anno_coco_dir + f'instances_{data}2017.json', 'w')
+        json_str = json.dumps(json_dict)
+        json_file.write(json_str)
+        json_file.close()
 
 if __name__ == '__main__':
     args = parse_command_line()
