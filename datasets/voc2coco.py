@@ -19,9 +19,13 @@ def voc2coco(args):
     image_id = 1
     bbox_id = 1
 
+<<<<<<< HEAD
     root = args.root
 
     directories = args.data_type
+=======
+    directories = ['train', 'test']
+>>>>>>> 23bb424 (temp chang directories)
     for directory in directories:
         json_dict = {"images": [], "annotations": [], "categories": []}
         categories = {}
