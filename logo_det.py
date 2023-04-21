@@ -25,7 +25,7 @@ def logo_det(root):
     dataset = os.path.join(root, 'deepFruits_dataset')
 
     for supercategory in os.listdir(dataset):
-        supercategory_directory = os.path.join(root, supercategory)
+        supercategory_directory = os.path.join(dataset, supercategory)
 
         for category in os.listdir(supercategory_directory):
             category_directory = os.path.join(supercategory_directory, category)

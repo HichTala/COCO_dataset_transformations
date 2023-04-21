@@ -25,9 +25,10 @@ def deep_fruits(root):
         bbox_id = 1
 
         anno_coco_dir, image_coco_dir = create_coco_tree(root, data)
+        dataset = os.path.join(root, 'deepFruits_dataset')
 
-        for category in os.listdir(root):
-            directory = os.path.join(root, category)
+        for category in os.listdir(dataset):
+            directory = os.path.join(dataset, category)
 
             anno_path_list = os.path.join(directory, f'{data}_RGB.txt')
             image_dir = os.path.join(directory, f'{data.upper()}_RGB/')
