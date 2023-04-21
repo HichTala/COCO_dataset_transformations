@@ -37,37 +37,38 @@ def deep_fruits(root):
                 annotations = f.read().split('\n')
 
             for annotation in annotations:
-                annotation = annotation.split()
+                if annotation != '':
+                    annotation = annotation.split()
 
-                file_name = annotation[0].split('/')[-1]
-                image = Image.open(image_dir + file_name)
-                json_dict['images'].append({
-                    'file_name': file_name,
-                    'height': image.size[1],
-                    'width': image.size[0],
-                    'id': image_id
-                })
-                os.rename(image_dir + file_name, image_coco_dir + file_name)
-
-                bboxs = np.split(np.array(annotation[2:]), int(annotation[1]))
-                for bbox in bboxs:
-                    x_min, y_min, x_max, y_max = list(map(int, bbox[:4]))
-                    category_id = int(bbox[4])
-
-                    if category not in categories:
-                        categories.update({category: category_id})
-
-                    json_dict['annotations'].append({
-                        "bbox": [x_min, y_min, x_max - x_min, y_max - y_min],
-                        "area": (x_max - x_min) * (y_max - y_min),
-                        "segmentation": [],
-                        "iscrowd": 0,
-                        "image_id": image_id,
-                        "category_id": category_id,
-                        "id": bbox_id
+                    file_name = annotation[0].split('/')[-1]
+                    image = Image.open(image_dir + file_name)
+                    json_dict['images'].append({
+                        'file_name': file_name,
+                        'height': image.size[1],
+                        'width': image.size[0],
+                        'id': image_id
                     })
+                    os.rename(image_dir + file_name, image_coco_dir + file_name)
 
-                    bbox_id += 1
+                    bboxs = np.split(np.array(annotation[2:]), int(annotation[1]))
+                    for bbox in bboxs:
+                        x_min, y_min, x_max, y_max = list(map(int, bbox[:4]))
+                        category_id = int(bbox[4])
+
+                        if category not in categories:
+                            categories.update({category: category_id})
+
+                        json_dict['annotations'].append({
+                            "bbox": [x_min, y_min, x_max - x_min, y_max - y_min],
+                            "area": (x_max - x_min) * (y_max - y_min),
+                            "segmentation": [],
+                            "iscrowd": 0,
+                            "image_id": image_id,
+                            "category_id": category_id,
+                            "id": bbox_id
+                        })
+
+                        bbox_id += 1
                 image_id += 1
 
             json_dict['categories'].append({
