@@ -48,7 +48,7 @@ def deep_fruits(root):
                 })
                 os.rename(image_dir + file_name, image_coco_dir + file_name)
 
-                bboxs = np.split(np.array(annotation[2:]), annotation[1])
+                bboxs = np.split(np.array(annotation[2:]), int(annotation[1]))
                 for bbox in bboxs:
                     x_min, y_min, x_max, y_max = list(map(int, bbox[:4]))
                     category_id = int(bbox[4])
