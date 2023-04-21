@@ -15,52 +15,6 @@ def parse_command_line():
     return parser.parse_args()
 
 
-def get_label2id(labels_path):
-    with open(labels_path, 'r') as f:
-        labels_str = f.read().split()
-    labels_ids = list(range(1, len(labels_str) + 1))
-    return dict(zip(labels_str, labels_ids))
-
-
-def get_annpaths(ann_dir_path, ann_ids_path, ext, ann_paths_list_path):
-    # If use annotation paths list
-    if ann_paths_list_path is not None:
-        with open(ann_paths_list_path, 'r') as f:
-            ann_paths = f.read().split()
-        return ann_paths
-
-    # If use annotation ids list
-    ext_with_dot = '.' + ext if ext != '' else ''
-    with open(ann_ids_path, 'r') as f:
-        ann_ids = f.read().split()
-    ann_paths = [os.path.join(ann_dir_path, aid + ext_with_dot) for aid in ann_ids]
-    return ann_paths
-
-
-def get_image_info(annotation_root, extract_num_from_imgid=True):
-    path = annotation_root.findtext('path')
-    if path is None:
-        filename = annotation_root.findtext('filename')
-    else:
-        filename = os.path.basename(path)
-    img_name = os.path.basename(filename)
-    img_id = os.path.splitext(img_name)[0]
-    if extract_num_from_imgid and isinstance(img_id, str):
-        img_id = int(re.findall(r'\d+', img_id)[0])
-
-    size = annotation_root.find('size')
-    width = int(size.findtext('width'))
-    height = int(size.findtext('height'))
-
-    image_info = {
-        'file_name': filename,
-        'height': height,
-        'width': width,
-        'id': img_id
-    }
-    return image_info
-
-
 def voc2coco(root):
     json_dict = {"images": [], "annotations": [], "categories": []}
     image_id = 1
