@@ -53,10 +53,10 @@ def deep_fruits(root):
                     bboxs = np.split(np.array(annotation[2:]), int(annotation[1]))
                     for bbox in bboxs:
                         x_min, y_min, x_max, y_max = list(map(int, bbox[:4]))
-                        category_id = int(bbox[4])
 
                         if category not in categories:
-                            categories.update({category: category_id})
+                            categories[category] = len(categories) + 1
+                        category_id = categories[category]
 
                         json_dict['annotations'].append({
                             "bbox": [x_min, y_min, x_max - x_min, y_max - y_min],
