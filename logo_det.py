@@ -41,6 +41,7 @@ def logo_det(root):
                         file_name = file_name + '.jpg'
 
                     image_path = os.path.join(category_directory, file_name)
+                    file_name = category + "_" + file_name
 
                     size = annotation_root.find('size')
                     width = int(size.findtext('width'))
