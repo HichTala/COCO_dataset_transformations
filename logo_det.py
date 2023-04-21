@@ -3,8 +3,6 @@ import json
 import os
 from xml.etree import ElementTree as ET
 
-from PIL import Image
-
 from create_COCO_tree import create_coco_tree
 
 
@@ -95,3 +93,8 @@ def logo_det(root):
                 json_str = json.dumps(json_dict)
                 json_file.write(json_str)
                 json_file.close()
+
+
+if __name__ == '__main__':
+    args = parse_command_line()
+    logo_det(args.root)
