@@ -82,6 +82,7 @@ def deep_fruits(root):
 
         print(bbox_id)
 
+
 if __name__ == '__main__':
     args = parse_command_line()
     deep_fruits(args.root)
