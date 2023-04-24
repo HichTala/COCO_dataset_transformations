@@ -30,7 +30,7 @@ def voc2coco(root):
 
         with open(anno_path_list, 'r') as f:
             anno_list = f.read().split()
-        anno_list = [ann[1:].split(',')[0] for ann in anno_list]
+        anno_list = [ann[1:].split(',')[0] for ann in anno_list][1:]
 
         for annotation in anno_list:
             anno_path = os.path.join(anno_dir, annotation + ".xml")
