@@ -33,58 +33,59 @@ def voc2coco(root):
 
         for annotation in anno_list:
             anno_path = os.path.join(anno_dir, annotation + ".xml")
-            annotation_tree = ET.parse(anno_path)
-            annotation_root = annotation_tree.getroot()
+            if os.path.exists(anno_path):
+                annotation_tree = ET.parse(anno_path)
+                annotation_root = annotation_tree.getroot()
 
-            path = annotation_root.findtext('path')
-            if path is None:
-                file_name = annotation_root.findtext('filename')
-            else:
-                file_name = os.path.basename(path)
+                path = annotation_root.findtext('path')
+                if path is None:
+                    file_name = annotation_root.findtext('filename')
+                else:
+                    file_name = os.path.basename(path)
 
-            if file_name[-4:] != '.jpg':
-                file_name = file_name + '.jpg'
+                if file_name[-4:] != '.jpg':
+                    file_name = file_name + '.jpg'
 
-            image_path = os.path.join(root, 'JPEGImages', file_name)
+                image_path = os.path.join(root, 'JPEGImages', file_name)
 
-            size = annotation_root.find('size')
-            width = int(size.findtext('width'))
-            height = int(size.findtext('height'))
+                size = annotation_root.find('size')
+                width = int(size.findtext('width'))
+                height = int(size.findtext('height'))
 
-            json_dict['images'].append({
-                'file_name': file_name,
-                'height': height,
-                'width': width,
-                'id': image_id
-            })
+                json_dict['images'].append({
+                    'file_name': file_name,
+                    'height': height,
+                    'width': width,
+                    'id': image_id
+                })
 
-            os.rename(image_path, image_coco_dir + file_name)
+                os.rename(image_path, image_coco_dir + file_name)
 
-            for obj in annotation_root.findall('object'):
-                category = obj.findtext('name')
-                if category is not None:
-                    if category not in categories:
-                        categories[category] = len(categories) + 1
-                    category_id = categories[category]
+                for obj in annotation_root.findall('object'):
+                    category = obj.findtext('name')
+                    if category is not None:
+                        if category not in categories:
+                            categories[category] = len(categories) + 1
+                        category_id = categories[category]
 
-                    bndbox = obj.find('bndbox')
-                    x_min = int(float(bndbox.findtext('xmin'))) - 1
-                    y_min = int(float(bndbox.findtext('ymin'))) - 1
-                    x_max = int(float(bndbox.findtext('xmax')))
-                    y_max = int(float(bndbox.findtext('ymax')))
+                        bndbox = obj.find('bndbox')
+                        x_min = int(float(bndbox.findtext('xmin'))) - 1
+                        y_min = int(float(bndbox.findtext('ymin'))) - 1
+                        x_max = int(float(bndbox.findtext('xmax')))
+                        y_max = int(float(bndbox.findtext('ymax')))
 
-                    json_dict['annotations'].append({
-                        "bbox": [x_min, y_min, x_max - x_min, y_max - y_min],
-                        "area": (x_max - x_min) * (y_max - y_min),
-                        "segmentation": [],
-                        "iscrowd": 0,
-                        "image_id": image_id,
-                        "category_id": category_id,
-                        "id": bbox_id
-                    })
+                        json_dict['annotations'].append({
+                            "bbox": [x_min, y_min, x_max - x_min, y_max - y_min],
+                            "area": (x_max - x_min) * (y_max - y_min),
+                            "segmentation": [],
+                            "iscrowd": 0,
+                            "image_id": image_id,
+                            "category_id": category_id,
+                            "id": bbox_id
+                        })
 
-                    bbox_id += 1
-            image_id += 1
+                        bbox_id += 1
+                image_id += 1
 
         for category, cid in categories.items():
             json_dict['categories'].append({
