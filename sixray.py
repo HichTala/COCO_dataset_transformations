@@ -1,7 +1,6 @@
 import argparse
 import json
 import os
-import re
 from xml.etree import ElementTree as ET
 
 from create_COCO_tree import create_coco_tree
@@ -68,10 +67,10 @@ def voc2coco(root):
                 category_id = categories[category]
 
                 bndbox = obj.find('bndbox')
-                x_min = int(bndbox.findtext('xmin')) - 1
-                y_min = int(bndbox.findtext('ymin')) - 1
-                x_max = int(bndbox.findtext('xmax'))
-                y_max = int(bndbox.findtext('ymax'))
+                x_min = int(float(bndbox.findtext('xmin'))) - 1
+                y_min = int(float(bndbox.findtext('ymin'))) - 1
+                x_max = int(float(bndbox.findtext('xmax')))
+                y_max = int(float(bndbox.findtext('ymax')))
 
                 json_dict['annotations'].append({
                     "bbox": [x_min, y_min, x_max - x_min, y_max - y_min],
