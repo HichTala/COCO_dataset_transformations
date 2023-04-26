@@ -20,7 +20,7 @@ def voc2coco(root):
     bbox_id = 1
     categories = {}
 
-    directories = ['train', 'val', 'test']
+    directories = ['train', 'test']
     for directory in directories:
         anno_path_list = os.path.join(root, f'ImageSets/1000/{directory}.csv')
         anno_dir = os.path.join(root, 'Annotations')
