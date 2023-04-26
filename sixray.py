@@ -61,28 +61,29 @@ def voc2coco(root):
             os.rename(image_path, image_coco_dir + file_name)
 
             for obj in annotation_root.findall('object'):
-                category = obj.findtext('name')
-                if category not in categories:
-                    categories[category] = len(categories) + 1
-                category_id = categories[category]
+                if obj is not None:
+                    category = obj.findtext('name')
+                    if category not in categories:
+                        categories[category] = len(categories) + 1
+                    category_id = categories[category]
 
-                bndbox = obj.find('bndbox')
-                x_min = int(float(bndbox.findtext('xmin'))) - 1
-                y_min = int(float(bndbox.findtext('ymin'))) - 1
-                x_max = int(float(bndbox.findtext('xmax')))
-                y_max = int(float(bndbox.findtext('ymax')))
+                    bndbox = obj.find('bndbox')
+                    x_min = int(float(bndbox.findtext('xmin'))) - 1
+                    y_min = int(float(bndbox.findtext('ymin'))) - 1
+                    x_max = int(float(bndbox.findtext('xmax')))
+                    y_max = int(float(bndbox.findtext('ymax')))
 
-                json_dict['annotations'].append({
-                    "bbox": [x_min, y_min, x_max - x_min, y_max - y_min],
-                    "area": (x_max - x_min) * (y_max - y_min),
-                    "segmentation": [],
-                    "iscrowd": 0,
-                    "image_id": image_id,
-                    "category_id": category_id,
-                    "id": bbox_id
-                })
+                    json_dict['annotations'].append({
+                        "bbox": [x_min, y_min, x_max - x_min, y_max - y_min],
+                        "area": (x_max - x_min) * (y_max - y_min),
+                        "segmentation": [],
+                        "iscrowd": 0,
+                        "image_id": image_id,
+                        "category_id": category_id,
+                        "id": bbox_id
+                    })
 
-                bbox_id += 1
+                    bbox_id += 1
             image_id += 1
 
         for category, cid in categories.items():
