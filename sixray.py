@@ -61,8 +61,8 @@ def voc2coco(root):
             os.rename(image_path, image_coco_dir + file_name)
 
             for obj in annotation_root.findall('object'):
-                if obj is not None:
-                    category = obj.findtext('name')
+                category = obj.findtext('name')
+                if category is not None:
                     if category not in categories:
                         categories[category] = len(categories) + 1
                     category_id = categories[category]
