@@ -22,7 +22,7 @@ def voc2coco(root):
 
     directories = ['train', 'test']
     for directory in directories:
-        anno_path_list = os.path.join(root, f'ImageSets/1000/{directory}.csv')
+        anno_path_list = os.path.join(root, f'ImageSets/100/{directory}.csv')
         anno_dir = os.path.join(root, 'Annotations')
 
         anno_coco_dir, image_coco_dir = create_coco_tree(root, directory)

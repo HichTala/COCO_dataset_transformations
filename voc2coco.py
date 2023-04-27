@@ -1,7 +1,6 @@
 import argparse
 import json
 import os
-import re
 from xml.etree import ElementTree as ET
 
 from create_COCO_tree import create_coco_tree
