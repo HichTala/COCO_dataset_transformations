@@ -1,0 +1,11 @@
+{
+  "datasets_name": [
+    "DeepFruits",
+    "SIXray"
+  ],
+
+  "datasets_infos": {
+    "DeepFruits": {"path":  "/home/cose-ia/data/deepFruits", "nb_images": 457, "nb_classes": 7,"nb_instances": 2553},
+    "SIXray": {"path": "/home/cose-ia/data/SIXray", "nb_classes": 6}
+  }
+}
