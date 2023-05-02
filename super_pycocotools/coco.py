@@ -75,7 +75,7 @@ class COCO:
         registered_dataset_list = []
 
         for dataset_name in dataset_names:
-            assert dataset_name in self.datasets, "unrecognized dataset {}".format(dataset_name)
+            assert dataset_name in self.datasets, "unrecognized datasets {}".format(dataset_name)
 
             data_dir = self.super_dataset["datasets_infos"][dataset_name]["path"]
 

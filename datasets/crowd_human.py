@@ -6,7 +6,7 @@ import os
 
 from PIL import Image
 
-from create_COCO_tree import create_coco_tree
+from datasets.create_COCO_tree import create_coco_tree
 
 
 def parse_command_line():
