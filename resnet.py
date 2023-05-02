@@ -9,9 +9,9 @@ class ResNet(nn.Module):
     def __init__(self):
         super(ResNet, self).__init__()
 
-        for parent in resnet50().named_children():
-            if parent[0] != 'fc':
-                self.__setattr__(parent[0], parent[1])
+        for name, module in resnet50().named_children():
+            if name != 'fc':
+                self.__setattr__(name, module)
 
     def forward(self, x):
         x = self.conv1(x)
