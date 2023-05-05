@@ -1,64 +1,42 @@
 import torch
 import torch.nn as nn
-from torchvision.models import resnet50
-from torchvision.models.detection import fasterrcnn_resnet50_fpn, FasterRCNN_ResNet50_FPN_Weights
-from torchvision.ops.misc import FrozenBatchNorm2d
+from detectron2.modeling import build_backbone
+from detectron2.structures import ImageList
 
 
 class ResNet(nn.Module):
-    def __init__(self):
+    def __init__(self, cfg):
         super(ResNet, self).__init__()
 
-        for name, module in resnet50().named_children():
-            if name != 'fc':
-                self.__setattr__(name, module)
+        self.device = torch.device(cfg.MODEL.DEVICE)
 
-    def forward(self, x):
-        x = self.conv1(x)
-        x = self.bn1(x)
-        x = self.relu(x)
-        x = self.maxpool(x)
+        self.pixel_mean = torch.Tensor(cfg.MODEL.PIXEL_MEAN).to(self.device).view(3, 1, 1)
+        self.pixel_std = torch.Tensor(cfg.MODEL.PIXEL_STD).to(self.device).view(3, 1, 1)
 
-        x = self.layer1(x)
-        x = self.layer2(x)
-        x = self.layer3(x)
-        x = self.layer4(x)
+        self.backbone = build_backbone(cfg)
+        self.avgpool = nn.AdaptiveAvgPool2d(output_size=(1, 1))
 
-        x = self.avgpool(x)
-        x = torch.flatten(x, 1)
-        return x
+    def forward(self, batched_inputs):
+        images = self.preprocess_image(batched_inputs)
 
-    def init_weight(self):
-        faster_rcnn_resnet50 = fasterrcnn_resnet50_fpn(
-            weights=FasterRCNN_ResNet50_FPN_Weights.COCO_V1
+        features = self.backbone(images.tensor)
+        features = [features[f] for f in features.keys()]
+        features = torch.cat(features)
+        features = self.avgpool(features)
+
+        features = torch.flatten(features, 1)
+        return features
+
+    def preprocess_image(self, batched_inputs):
+        """
+        Normalize, pad and batch the input images.
+        """
+        images = [x["image"].to(self.device) for x in batched_inputs]
+        images = [(x - self.pixel_mean) / self.pixel_std for x in images]
+        images = ImageList.from_tensors(
+            images,
+            self.backbone.size_divisibility,
+            padding_constraints=self.backbone.padding_constraints,
         )
-        resnet_weights = faster_rcnn_resnet50.backbone.body
 
-        bn_to_replace = []
-        for name, module in resnet_weights.named_modules():
-            if isinstance(module, FrozenBatchNorm2d):
-                print('adding ', name)
-                bn_to_replace.append(name)
-
-        for layer_name in bn_to_replace:
-            *parent, child = layer_name.split('.')
-            if len(parent) > 0:
-                m = resnet_weights.__getattr__(parent[0])
-                for p in parent[1:]:
-                    m = m.__getattr__(p)
-                original_layer = m.__getattr__(child)
-            else:
-                m = resnet_weights.__getattr__(child)
-                original_layer = m
-            in_channels = original_layer.weight.shape[0]
-            bn = nn.BatchNorm2d(in_channels)
-            with torch.no_grad():
-                bn.weight = nn.Parameter(original_layer.weight)
-                bn.bias = nn.Parameter(original_layer.bias)
-                bn.running_mean = original_layer.running_mean
-                bn.running_var = original_layer.running_var
-            m.__setattr__(child, bn)
-
-        resnet_weights.bn1 = resnet_weights.bn1.bn1
-
-        self.load_state_dict(resnet_weights.state_dict())
+        return images

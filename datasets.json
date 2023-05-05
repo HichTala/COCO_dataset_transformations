@@ -3,9 +3,22 @@
     "DeepFruits",
     "SIXray"
   ],
-
   "datasets_infos": {
-    "DeepFruits": {"path":  "/home/cose-ia/data/deepFruits", "nb_images": 457, "nb_classes": 7,"nb_instances": 2553},
-    "SIXray": {"path": "/home/cose-ia/data/SIXray", "nb_classes": 6}
+    "DeepFruits": {
+      "root": "/home/cose-ia/data/deepFruits",
+      "train": "/home/cose-ia/data/deepFruits/annotations/instances_train2017.json",
+      "val": "",
+      "test": "",
+      "nb_images": 457,
+      "nb_classes": 7,
+      "nb_instances": 2553
+    },
+    "SIXray": {
+      "root": "/home/cose-ia/data/SIXray",
+      "train": "/home/cose-ia/data/SIXray/annotations/instances_train2017.json",
+      "val": "",
+      "test": "/home/cose-ia/data/SIXray/annotations/instances_test2017.json",
+      "nb_classes": 6
+    }
   }
 }
