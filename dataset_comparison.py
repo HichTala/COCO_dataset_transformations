@@ -34,8 +34,7 @@ def main(args):
         dataloader = build_detection_train_loader(cfg)
         resnet = ResNet(cfg).cuda()
 
-        cfg.MODEL.WEIGHTS = "https://dl.fbaipublicfiles.com/detectron2/COCO-Detection/faster_rcnn_R_50_C4_1x/137257644" \
-                            "/model_final_721ade.pkl"
+        cfg.MODEL.WEIGHTS = "detectron2://backbone_cross_domain/model_final_721ade.pkl"
         checkpointer = DetectionCheckpointer(resnet)
         checkpointer.load(cfg.MODEL.WEIGHTS)
 
