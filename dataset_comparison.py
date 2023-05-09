@@ -39,17 +39,18 @@ def main(args):
         checkpointer.load(cfg.MODEL.WEIGHTS)
 
         batch_mean = []
-        for data in dataloader:
-            outputs = resnet(data)
-            if len(data) == batch_size:
-                outputs_mean = outputs.mean(0).unsqueeze(0)
-                batch_mean.append(outputs_mean)
-            else:
-                outputs_mean = (outputs.sum(0) / batch_size).unsqueeze(0)
-                batch_mean.append(outputs_mean)
+        with torch.no_grad():
+            for data in dataloader:
+                outputs = resnet(data)
+                if len(data) == batch_size:
+                    outputs_mean = outputs.mean(0).unsqueeze(0)
+                    batch_mean.append(outputs_mean)
+                else:
+                    outputs_mean = (outputs.sum(0) / batch_size).unsqueeze(0)
+                    batch_mean.append(outputs_mean)
 
-        batch_mean = torch.cat(batch_mean).mean(0)
-        save_path = os.path.join(args.save_path, dataset)
+            batch_mean = torch.cat(batch_mean).mean(0)
+            save_path = os.path.join(args.save_path, dataset)
 
         with open(save_path, 'wb') as f:
             pickle.dump(batch_mean, f)
