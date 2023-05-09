@@ -22,10 +22,9 @@ def logo_det(root):
     bbox_id = 1
 
     anno_coco_dir, image_coco_dir = create_coco_tree(root, 'train')
-    dataset = os.path.join(root, 'deepFruits_dataset')
 
-    for supercategory in os.listdir(dataset):
-        supercategory_directory = os.path.join(dataset, supercategory)
+    for supercategory in os.listdir(root):
+        supercategory_directory = os.path.join(root, supercategory)
 
         for category in os.listdir(supercategory_directory):
             category_directory = os.path.join(supercategory_directory, category)
