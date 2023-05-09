@@ -10,17 +10,20 @@ def parse_command_line():
     parser = argparse.ArgumentParser('parser', add_help=False)
 
     parser.add_argument('root', default='', type=str)
+    parser.add_argument('--data_type', nargs='+', type=str, default=['train', 'val', 'test'])
 
     return parser.parse_args()
 
 
-def voc2coco(root):
+def voc2coco(args):
     json_dict = {"images": [], "annotations": [], "categories": []}
     image_id = 1
     bbox_id = 1
     categories = {}
 
-    directories = ['train', 'val', 'test']
+    root = args.root
+
+    directories = args.data_type
     for directory in directories:
         anno_path_list = os.path.join(root, f'ImageSets/Main/{directory}.txt')
         anno_dir = os.path.join(root, 'Annotations')
@@ -99,4 +102,4 @@ def voc2coco(root):
 
 if __name__ == '__main__':
     args = parse_command_line()
-    voc2coco(args.root)
+    voc2coco(args)
