@@ -25,7 +25,7 @@ def logo_det(root):
 
     logo_det_path = os.path.join(root, 'LogoDet-3K')
 
-    for supercategory in os.listdir(root):
+    for supercategory in os.listdir(logo_det_path):
         supercategory_directory = os.path.join(root, supercategory)
 
         for category in os.listdir(supercategory_directory):
