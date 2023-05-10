@@ -26,34 +26,35 @@ def main(args):
 
     batch_size = args.batch_size
 
-    for dataset in datasets:
-        cfg = get_cfg()
-        cfg.SOLVER.IMS_PER_BATCH = batch_size
+    for dataset_tuple in datasets:
+        for dataset in dataset_tuple:
+            cfg = get_cfg()
+            cfg.SOLVER.IMS_PER_BATCH = batch_size
 
-        dataloader = build_detection_test_loader(cfg, dataset)
-        resnet = ResNet(cfg).cuda()
+            dataloader = build_detection_test_loader(cfg, dataset)
+            resnet = ResNet(cfg).cuda()
 
-        cfg.MODEL.WEIGHTS = "detectron2://backbone_cross_domain/model_final_721ade.pkl"
-        checkpointer = DetectionCheckpointer(resnet)
-        checkpointer.load(cfg.MODEL.WEIGHTS)
+            cfg.MODEL.WEIGHTS = "detectron2://backbone_cross_domain/model_final_721ade.pkl"
+            checkpointer = DetectionCheckpointer(resnet)
+            checkpointer.load(cfg.MODEL.WEIGHTS)
 
-        batch_mean = []
-        with torch.no_grad():
-            for data in dataloader:
-                outputs = resnet(data)
-                if len(data) == batch_size:
-                    outputs_mean = outputs.mean(0).unsqueeze(0)
-                    batch_mean.append(outputs_mean)
-                else:
-                    outputs_mean = (outputs.sum(0) / batch_size).unsqueeze(0)
-                    batch_mean.append(outputs_mean)
+            batch_mean = []
+            with torch.no_grad():
+                for data in dataloader:
+                    outputs = resnet(data)
+                    if len(data) == batch_size:
+                        outputs_mean = outputs.mean(0).unsqueeze(0)
+                        batch_mean.append(outputs_mean)
+                    else:
+                        outputs_mean = (outputs.sum(0) / batch_size).unsqueeze(0)
+                        batch_mean.append(outputs_mean)
 
-            batch_mean = torch.cat(batch_mean).mean(0)
-            save_path = os.path.join(args.save_path, dataset)
+                batch_mean = torch.cat(batch_mean).mean(0)
+                save_path = os.path.join(args.save_path, dataset)
 
-        with open(save_path, 'wb') as f:
-            pickle.dump(batch_mean, f)
-            print(dataset, "ok")
+            with open(save_path, 'wb') as f:
+                pickle.dump(batch_mean, f)
+                print(dataset, "ok")
 
 
 if __name__ == '__main__':
