@@ -28,10 +28,9 @@ def main(args):
 
     for dataset in datasets:
         cfg = get_cfg()
-        cfg.DATASETS.TRAIN = dataset
         cfg.SOLVER.IMS_PER_BATCH = batch_size
 
-        dataloader = build_detection_test_loader(cfg)
+        dataloader = build_detection_test_loader(cfg, dataset)
         resnet = ResNet(cfg).cuda()
 
         cfg.MODEL.WEIGHTS = "detectron2://backbone_cross_domain/model_final_721ade.pkl"
