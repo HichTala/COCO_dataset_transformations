@@ -23,6 +23,8 @@ def logo_det(root):
 
     anno_coco_dir, image_coco_dir = create_coco_tree(root, 'train')
 
+    logo_det_path = os.path.join(root, 'LogoDet-3K')
+
     for supercategory in os.listdir(root):
         supercategory_directory = os.path.join(root, supercategory)
 
