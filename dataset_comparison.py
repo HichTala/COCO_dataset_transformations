@@ -5,7 +5,7 @@ import pickle
 import torch
 from detectron2.checkpoint import DetectionCheckpointer
 from detectron2.config import get_cfg
-from detectron2.data import build_detection_train_loader
+from detectron2.data import build_detection_test_loader
 
 from resnet import ResNet
 from super_pycocotools.detectron import register
@@ -31,7 +31,7 @@ def main(args):
         cfg.DATASETS.TRAIN = dataset
         cfg.SOLVER.IMS_PER_BATCH = batch_size
 
-        dataloader = build_detection_train_loader(cfg)
+        dataloader = build_detection_test_loader(cfg)
         resnet = ResNet(cfg).cuda()
 
         cfg.MODEL.WEIGHTS = "detectron2://backbone_cross_domain/model_final_721ade.pkl"
