@@ -43,6 +43,9 @@ def logo_det(root):
                         file_name = file_name + '.jpg'
 
                     image_path = os.path.join(category_directory, file_name)
+                    if not(os.path.exists(image_path)):
+                        file_name = file[-4:] + '.jpg'
+                        image_path = os.path.join(category_directory, file_name)
                     file_name = category + "_" + file_name
 
                     size = annotation_root.find('size')
@@ -56,7 +59,18 @@ def logo_det(root):
                         'id': image_id
                     })
 
-                    os.rename(image_path, image_coco_dir + file_name)
+                    try:
+                        os.rename(image_path, image_coco_dir + file_name)
+                    except FileNotFoundError as e:
+                        print(str(e))
+                        print("file", file)
+                        print("file_name", file_name)
+                        print("category", category)
+                        print("category_directory", category_directory)
+                        print("image_path", image_path)
+                        print("supercategory_directory", supercategory_directory)
+                        print("supercategory", supercategory)
+                        print("annotation_root.findtext('filename')", annotation_root.findtext('filename'))
 
                     for obj in annotation_root.findall('object'):
                         category = obj.findtext('name')
