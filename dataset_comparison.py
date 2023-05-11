@@ -5,7 +5,7 @@ import pickle
 import torch
 from detectron2.checkpoint import DetectionCheckpointer
 from detectron2.config import get_cfg
-from detectron2.data import build_detection_test_loader
+from detectron2.data import build_detection_train_loader
 
 from resnet import ResNet
 from super_pycocotools.detectron import register
@@ -15,7 +15,7 @@ def parse_command_line():
     parser = argparse.ArgumentParser('parser', add_help=False)
 
     parser.add_argument('annotations', default='', type=str)
-    parser.add_argument('--batch_size', default=16, type=int)
+    parser.add_argument('--batch_size', default=1, type=int)
     parser.add_argument('--save-path', default='./', type=str)
 
     return parser.parse_args()
@@ -29,10 +29,13 @@ def main(args):
     for dataset_tuple in datasets:
         for dataset in dataset_tuple:
             cfg = get_cfg()
+            cfg.DATASETS.TRAIN = dataset
             cfg.SOLVER.IMS_PER_BATCH = batch_size
 
-            dataloader = build_detection_test_loader(cfg, dataset)
+            dataloader = build_detection_train_loader(cfg)
             resnet = ResNet(cfg).cuda()
+
+            dataset_size = len(dataloader.dataset.dataset.dataset)
 
             cfg.MODEL.WEIGHTS = "detectron2://backbone_cross_domain/model_final_721ade.pkl"
             checkpointer = DetectionCheckpointer(resnet)
@@ -40,14 +43,11 @@ def main(args):
 
             batch_mean = []
             with torch.no_grad():
-                for data in dataloader:
+                dataloader_iteration = iter(dataloader)
+                for i in range(dataset_size):
+                    data = next(dataloader_iteration)
                     outputs = resnet(data)
-                    if len(data) == batch_size:
-                        outputs_mean = outputs.mean(0).unsqueeze(0)
-                        batch_mean.append(outputs_mean)
-                    else:
-                        outputs_mean = (outputs.sum(0) / batch_size).unsqueeze(0)
-                        batch_mean.append(outputs_mean)
+                    batch_mean.append(outputs)
 
                 batch_mean = torch.cat(batch_mean).mean(0)
                 save_path = os.path.join(args.save_path, dataset)
