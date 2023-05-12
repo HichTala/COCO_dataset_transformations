@@ -16,7 +16,6 @@ def parse_command_line():
 
 
 def visdrone2coco(root):
-    json_dict = {"images": [], "annotations": [], "categories": []}
     image_id = 1
     bbox_id = 1
     categories = ['ignore', 'pedestrian', 'person', 'bicycle', 'car', 'van', 'truck', 'awning-tricycle', 'tricycle',
@@ -24,6 +23,7 @@ def visdrone2coco(root):
 
     directories = ['train', 'val', 'test-dev']
     for directory in directories:
+        json_dict = {"images": [], "annotations": [], "categories": []}
         image_dir = os.path.join(root, f'VisDrone2019-DET-{directory}/images/')
         anno_dir = os.path.join(root, f'VisDrone2019-DET-{directory}/annotations/')
 

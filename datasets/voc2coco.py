@@ -16,15 +16,15 @@ def parse_command_line():
 
 
 def voc2coco(args):
-    json_dict = {"images": [], "annotations": [], "categories": []}
     image_id = 1
     bbox_id = 1
-    categories = {}
 
     root = args.root
 
     directories = args.data_type
     for directory in directories:
+        json_dict = {"images": [], "annotations": [], "categories": []}
+        categories = {}
         anno_path_list = os.path.join(root, f'ImageSets/Main/{directory}.txt')
         anno_dir = os.path.join(root, 'Annotations')
 
