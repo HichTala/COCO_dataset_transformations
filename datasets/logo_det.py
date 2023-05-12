@@ -44,7 +44,7 @@ def logo_det(root):
 
                     image_path = os.path.join(category_directory, file_name)
                     if not(os.path.exists(image_path)):
-                        file_name = file[-4:] + '.jpg'
+                        file_name = file[:-4] + '.jpg'
                         image_path = os.path.join(category_directory, file_name)
                     file_name = category + "_" + file_name
 
@@ -62,7 +62,6 @@ def logo_det(root):
                     try:
                         os.rename(image_path, image_coco_dir + file_name)
                     except FileNotFoundError as e:
-                        print(str(e))
                         print("file", file)
                         print("file_name", file_name)
                         print("category", category)
@@ -71,6 +70,7 @@ def logo_det(root):
                         print("supercategory_directory", supercategory_directory)
                         print("supercategory", supercategory)
                         print("annotation_root.findtext('filename')", annotation_root.findtext('filename'))
+                        raise e
 
                     for obj in annotation_root.findall('object'):
                         category = obj.findtext('name')
@@ -98,17 +98,17 @@ def logo_det(root):
                         bbox_id += 1
                     image_id += 1
 
-                for category, cid in categories.items():
-                    json_dict['categories'].append({
-                        'supercategory': supercategories[category],
-                        'id': cid,
-                        'name': category
-                    })
+    for category, cid in categories.items():
+        json_dict['categories'].append({
+            'supercategory': supercategories[category],
+            'id': cid,
+            'name': category
+        })
 
-                json_file = open(anno_coco_dir + f'instances_train2017.json', 'w')
-                json_str = json.dumps(json_dict)
-                json_file.write(json_str)
-                json_file.close()
+    json_file = open(anno_coco_dir + f'instances_train2017.json', 'w')
+    json_str = json.dumps(json_dict)
+    json_file.write(json_str)
+    json_file.close()
 
 
 if __name__ == '__main__':
