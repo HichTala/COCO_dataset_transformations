@@ -22,8 +22,8 @@ def voc2coco(root):
     for directory in directories:
         json_dict = {"images": [], "annotations": [], "categories": []}
         categories = {}
-        anno_path_list = os.path.join(root, f'ImageSets/100/{directory}.csv')
-        anno_dir = os.path.join(root, 'Annotations')
+        anno_path_list = os.path.join(root, f'ImageSet/100/{directory}.csv')
+        anno_dir = os.path.join(root, 'Annotation')
 
         anno_coco_dir, image_coco_dir = create_coco_tree(root, directory)
 
@@ -46,7 +46,7 @@ def voc2coco(root):
                 if file_name[-4:] != '.jpg':
                     file_name = file_name + '.jpg'
 
-                image_path = os.path.join(root, 'JPEGImages', file_name)
+                image_path = os.path.join(root, 'JPEGImage', file_name)
 
                 size = annotation_root.find('size')
                 width = int(size.findtext('width'))
