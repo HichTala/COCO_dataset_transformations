@@ -19,8 +19,8 @@
   ],
   "datasets_infos": {
     "DeepFruits": {
-      "root": "/gpfsscratch/rech/vlf/ues92cf/DeepFruits",
-      "train": "/gpfsscratch/rech/vlf/ues92cf/DeepFruits/annotations/instances_train2017.json",
+      "root": "/home/cose-ia/data/deepFruits",
+      "train": "/home/cose-ia/data/deepFruits/annotations/instances_train2017.json",
       "val": "",
       "test": "",
       "nb_images": 457,
