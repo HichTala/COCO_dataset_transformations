@@ -6,6 +6,7 @@ import torch
 from detectron2.checkpoint import DetectionCheckpointer
 from detectron2.config import get_cfg
 from detectron2.data import build_detection_train_loader
+from tqdm import tqdm
 
 from resnet import ResNet
 from super_pycocotools.detectron import register
@@ -44,7 +45,7 @@ def main(args):
             batch_mean = []
             with torch.no_grad():
                 dataloader_iteration = iter(dataloader)
-                for i in range(dataset_size):
+                for _ in tqdm(range(dataset_size)):
                     data = next(dataloader_iteration)
                     outputs = resnet(data)
                     batch_mean.append(outputs)
