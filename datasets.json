@@ -1,5 +1,6 @@
 {
   "datasets_name": [
+    "LogoDet",
     "DeepFruits",
     "SIXray",
     "clipart",
@@ -11,7 +12,6 @@
     "fashionpedia",
     "COCO",
     "KITTI",
-    "LogoDet-3K",
     "Oktoberfest",
     "VisDrone"
   ],
@@ -79,7 +79,7 @@
       "val": "/gpfsscratch/rech/vlf/ues92cf/KITTI/annotations/instances_val2017.json",
       "test": ""
     },
-    "LogoDet-3K": {
+    "LogoDet": {
       "root": "/gpfsscratch/rech/vlf/ues92cf/LogoDet",
       "train": "/gpfsscratch/rech/vlf/ues92cf/LogoDet/annotations/instances_train2017.json",
       "val": "",
