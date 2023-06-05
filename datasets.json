@@ -1,0 +1,107 @@
+{
+  "datasets_name": [
+    "DeepFruits",
+    "SIXray",
+    "clipart",
+    "comic",
+    "watercolor",
+    "CrowdHuman",
+    "DIOR",
+    "DOTA",
+    "fashionpedia",
+    "COCO",
+    "KITTI",
+    "Oktoberfest",
+    "VisDrone"
+  ],
+  "datasets_infos": {
+    "DeepFruits": {
+      "root": "/gpfsscratch/rech/vlf/ues92cf/DeepFruits",
+      "train": "/gpfsscratch/rech/vlf/ues92cf/DeepFruits/annotations/instances_train2017.json",
+      "val": "/gpfsscratch/rech/vlf/ues92cf/DeepFruits/annotations/instances_val2017.json",
+      "test": "/gpfsscratch/rech/vlf/ues92cf/DeepFruits/annotations/instances_test2017.json",
+      "nb_images": 457,
+      "nb_classes": 7,
+      "nb_instances": 2553
+    },
+    "clipart": {
+      "root": "/gpfsscratch/rech/vlf/ues92cf/clipart/clipart",
+      "train": "/gpfsscratch/rech/vlf/ues92cf/clipart/clipart/annotations/instances_train2017.json",
+      "val": "/gpfsscratch/rech/vlf/ues92cf/clipart/clipart/annotations/instances_val2017.json",
+      "test": "/gpfsscratch/rech/vlf/ues92cf/clipart/clipart/annotations/instances_test2017.json"
+    },
+    "comic": {
+      "root": "/gpfsscratch/rech/vlf/ues92cf/clipart/comic",
+      "train": "/gpfsscratch/rech/vlf/ues92cf/clipart/comic/annotations/instances_train2017.json",
+      "val": "/gpfsscratch/rech/vlf/ues92cf/clipart/comic/annotations/instances_val2017.json",
+      "test": "/gpfsscratch/rech/vlf/ues92cf/clipart/comic/annotations/instances_test2017.json"
+    },
+    "watercolor": {
+      "root": "/gpfsscratch/rech/vlf/ues92cf/clipart/watercolor",
+      "train": "/gpfsscratch/rech/vlf/ues92cf/clipart/watercolor/annotations/instances_train2017.json",
+      "val": "/gpfsscratch/rech/vlf/ues92cf/clipart/watercolor/annotations/instances_val2017.json",
+      "test": "/gpfsscratch/rech/vlf/ues92cf/clipart/watercolor/annotations/instances_test2017.json"
+    },
+    "CrowdHuman": {
+      "root": "/gpfsscratch/rech/vlf/ues92cf/CrowdHuman",
+      "train": "/gpfsscratch/rech/vlf/ues92cf/CrowdHuman/annotations/instances_train2017.json",
+      "val": "/gpfsscratch/rech/vlf/ues92cf/CrowdHuman/annotations/instances_val2017.json",
+      "test": "/gpfsscratch/rech/vlf/ues92cf/CrowdHuman/annotations/instances_test2017.json"
+    },
+    "DIOR": {
+      "root": "/gpfsscratch/rech/vlf/ues92cf/DIOR",
+      "train": "/gpfsscratch/rech/vlf/ues92cf/DIOR/annotations/instances_train2017.json",
+      "val": "/gpfsscratch/rech/vlf/ues92cf/DIOR/annotations/instances_val2017.json",
+      "test": "/gpfsscratch/rech/vlf/ues92cf/DIOR/annotations/instances_test2017.json"
+    },
+    "DOTA": {
+      "root": "/gpfsscratch/rech/vlf/ues92cf/DOTA/coco_format",
+      "train": "/gpfsscratch/rech/vlf/ues92cf/DOTA/coco_format/annotations/instances_train2017.json",
+      "val": "/gpfsscratch/rech/vlf/ues92cf/DOTA/coco_format/annotations/instances_val2017.json",
+      "test": "/gpfsscratch/rech/vlf/ues92cf/DOTA/coco_format/annotations/instances_test2017.json"
+    },
+    "fashionpedia": {
+      "root": "/gpfsscratch/rech/vlf/ues92cf/fashionpedia",
+      "train": "/gpfsscratch/rech/vlf/ues92cf/fashionpedia/annotations/instances_attributes_train2020.json",
+      "val": "/gpfsscratch/rech/vlf/ues92cf/fashionpedia/annotations/instances_attributes_val2020.json",
+      "test": "/gpfsscratch/rech/vlf/ues92cf/fashionpedia/annotations/instances_attributes_test2020.json"
+    },
+    "COCO": {
+      "root": "/gpfsscratch/rech/vlf/ues92cf/COCO",
+      "train": "/gpfsscratch/rech/vlf/ues92cf/COCO/annotations/instances_train2017.json",
+      "val": "/gpfsscratch/rech/vlf/ues92cf/COCO/annotations/instances_val2017.json",
+      "test": ""
+    },
+    "KITTI": {
+      "root": "/gpfsscratch/rech/vlf/ues92cf/KITTI",
+      "train": "/gpfsscratch/rech/vlf/ues92cf/KITTI/annotations/instances_train2017.json",
+      "val": "/gpfsscratch/rech/vlf/ues92cf/KITTI/annotations/instances_val2017.json",
+      "test": "/gpfsscratch/rech/vlf/ues92cf/KITTI/annotations/instances_test2017.json"
+    },
+    "LogoDet": {
+      "root": "/gpfsscratch/rech/vlf/ues92cf/LogoDet",
+      "train": "/gpfsscratch/rech/vlf/ues92cf/LogoDet/annotations/instances_train2017.json",
+      "val": "",
+      "test": ""
+    },
+    "Oktoberfest": {
+      "root": "/gpfsscratch/rech/vlf/ues92cf/Oktoberfest",
+      "train": "/gpfsscratch/rech/vlf/ues92cf/Oktoberfest/annotations/instances_train2017.json",
+      "val": "/gpfsscratch/rech/vlf/ues92cf/Oktoberfest/annotations/instances_val2017.json",
+      "test": "/gpfsscratch/rech/vlf/ues92cf/Oktoberfest/annotations/instances_test2017.json"
+    },
+    "VisDrone": {
+      "root": "/gpfsscratch/rech/vlf/ues92cf/VisDrone",
+      "train": "/gpfsscratch/rech/vlf/ues92cf/VisDrone/annotations/instances_train2017.json",
+      "val": "/gpfsscratch/rech/vlf/ues92cf/VisDrone/annotations/instances_val2017.json",
+      "test": "/gpfsscratch/rech/vlf/ues92cf/VisDrone/annotations/instances_test2017.json"
+    },
+    "SIXray": {
+      "root": "/gpfsscratch/rech/vlf/ues92cf/SIXray",
+      "train": "/gpfsscratch/rech/vlf/ues92cf/SIXray/annotations/instances_train2017.json",
+      "val": "/gpfsscratch/rech/vlf/ues92cf/SIXray/annotations/instances_val2017.json",
+      "test": "/gpfsscratch/rech/vlf/ues92cf/SIXray/annotations/instances_test2017.json",
+      "nb_classes": 6
+    }
+  }
+}
