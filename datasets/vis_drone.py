@@ -42,26 +42,26 @@ def visdrone2coco(root):
                 annotations = f.read().split('\n')[:-1]
             annotations = [list(map(int, annotation.split(',')[:8])) for annotation in annotations]
 
-            for annotation in annotations:
-                if annotation[5] != 0 and annotation[5] != 1:
-                    json_dict['annotations'].append({
-                        "bbox": annotation[:4],
-                        "area": annotation[2] * annotation[3],
-                        "segmentation": [],
-                        "iscrowd": 0,
-                        "image_id": image_id,
-                        "category_id": annotation[5],
-                        "id": bbox_id
-                    })
-                    bbox_id += 1
-            image_id += 1
-
-            for cid, category in enumerate(categories):
-                json_dict['categories'].append({
-                    "supercategory": category,
-                    "id": cid,
-                    "name": category
+        for annotation in annotations:
+            if annotation[5] != 0 and annotation[5] != 1:
+                json_dict['annotations'].append({
+                    "bbox": annotation[:4],
+                    "area": annotation[2] * annotation[3],
+                    "segmentation": [],
+                    "iscrowd": 0,
+                    "image_id": image_id,
+                    "category_id": annotation[5],
+                    "id": bbox_id
                 })
+                bbox_id += 1
+        image_id += 1
+
+        for cid, category in enumerate(categories):
+            json_dict['categories'].append({
+                "supercategory": category,
+                "id": cid,
+                "name": category
+            })
 
         if directory == 'test-dev':
             directory = directory[:4]
