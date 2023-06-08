@@ -53,9 +53,6 @@ def main(args):
                 batch_std = torch.cat(batch_list).std(0)
                 save_path = os.path.join(args.save_path, dataset)
 
-                if not os.path.exists(save_path):
-                    os.makedirs(save_path)
-
                 with open(save_path + '_mean.pkl', 'wb') as f:
                     pickle.dump(batch_mean, f)
                 with open(save_path + '_std.pkl', 'wb') as f:
