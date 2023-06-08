@@ -56,12 +56,12 @@ def visdrone2coco(root):
                     bbox_id += 1
             image_id += 1
 
-            for cid, category in enumerate(categories):
-                json_dict['categories'].append({
-                    "supercategory": category,
-                    "id": cid,
-                    "name": category
-                })
+        for cid, category in enumerate(categories):
+            json_dict['categories'].append({
+                "supercategory": category,
+                "id": cid,
+                "name": category
+            })
 
         if directory == 'test-dev':
             directory = directory[:4]
