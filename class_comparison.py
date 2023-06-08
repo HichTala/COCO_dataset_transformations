@@ -44,7 +44,7 @@ def main(args):
             class_mean = {}
             with torch.no_grad():
                 dataloader_iteration = iter(dataloader)
-                for i in range(1):
+                for i in range(dataset_size):
                     data = next(dataloader_iteration)
                     box_features, target_classes = pool(data)
 
