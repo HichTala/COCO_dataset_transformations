@@ -52,7 +52,7 @@ class ResNetROIPool(nn.Module):
         box_features = self.pooler(
             [features[f] for f in self.in_features], target_boxes
         )
-        box_features = self.avgpool(box_features).squeeze(dim=[2, 3])
+        box_features = self.avgpool(box_features).squeeze(dim=2).squeeze(dim=2)
 
         return box_features, target_classes
 
