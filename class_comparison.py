@@ -66,7 +66,7 @@ def main(args):
                     with open(save_path + '_mean.pkl', 'wb') as f:
                         pickle.dump(mean, f)
                     with open(save_path + '_std.pkl', 'wb') as f:
-                        pickle.dump(mean, f)
+                        pickle.dump(std, f)
 
             print(dataset, "ok")
 
