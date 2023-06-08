@@ -7,7 +7,7 @@ from detectron2.checkpoint import DetectionCheckpointer
 from detectron2.config import get_cfg
 from detectron2.data import build_detection_train_loader
 
-from resnet import ResNet
+from roi_pool import ResNetROIPool
 from super_pycocotools.detectron import register
 
 
@@ -15,7 +15,7 @@ def parse_command_line():
     parser = argparse.ArgumentParser('parser', add_help=False)
 
     parser.add_argument('annotations', default='', type=str)
-    parser.add_argument('--batch_size', default=16, type=int)
+    parser.add_argument('--batch_size', default=1, type=int)
     parser.add_argument('--save-path', default='./', type=str)
 
     return parser.parse_args()
@@ -26,34 +26,47 @@ def main(args):
 
     batch_size = args.batch_size
 
-    for dataset in datasets:
-        cfg = get_cfg()
-        cfg.DATASETS.TRAIN = dataset
-        cfg.SOLVER.IMS_PER_BATCH = batch_size
+    for dataset_tuple in datasets:
+        for dataset in dataset_tuple:
+            cfg = get_cfg()
+            cfg.DATASETS.TRAIN = dataset
+            cfg.SOLVER.IMS_PER_BATCH = batch_size
 
-        dataloader = build_detection_train_loader(cfg)
-        resnet = ResNet(cfg).cuda()
+            dataloader = build_detection_train_loader(cfg)
+            pool = ResNetROIPool(cfg).cuda()
 
-        cfg.MODEL.WEIGHTS = "detectron2://backbone_cross_domain/model_final_721ade.pkl"
-        checkpointer = DetectionCheckpointer(resnet)
-        checkpointer.load(cfg.MODEL.WEIGHTS)
+            dataset_size = len(dataloader.dataset.dataset.dataset)
 
-        batch_mean = []
-        with torch.no_grad():
-            for data in dataloader:
-                outputs = resnet(data)
-                if len(data) == batch_size:
-                    outputs_mean = outputs.mean(0).unsqueeze(0)
-                    batch_mean.append(outputs_mean)
-                else:
-                    outputs_mean = (outputs.sum(0) / batch_size).unsqueeze(0)
-                    batch_mean.append(outputs_mean)
+            cfg.MODEL.WEIGHTS = "detectron2://backbone_cross_domain/model_final_721ade.pkl"
+            checkpointer = DetectionCheckpointer(pool)
+            checkpointer.load(cfg.MODEL.WEIGHTS)
 
-            batch_mean = torch.cat(batch_mean).mean(0)
-            save_path = os.path.join(args.save_path, dataset)
+            class_mean = {}
+            with torch.no_grad():
+                dataloader_iteration = iter(dataloader)
+                for i in range(1):
+                    data = next(dataloader_iteration)
+                    box_features, target_classes = pool(data)
 
-        with open(save_path, 'wb') as f:
-            pickle.dump(batch_mean, f)
+                    for target_classe in target_classes:
+                        for class_id, box in zip(target_classe, box_features):
+                            if class_id.item() not in class_mean:
+                                class_mean[class_id.item()] = []
+                            class_mean[class_id.item()].append(box)
+
+                for class_id in class_mean.keys():
+                    mean = torch.cat(class_mean[class_id]).mean(0)
+                    std = torch.cat(class_mean[class_id]).std(0)
+                    save_path = os.path.join(args.save_path, dataset)
+
+                    if not os.path.exists(save_path):
+                        os.makedirs(save_path)
+
+                    with open(save_path + 'mean_' + str(class_id) + '.pkl', 'wb') as f:
+                        pickle.dump(mean, f)
+                    with open(save_path + 'std_' + str(class_id) + '.pkl', 'wb') as f:
+                        pickle.dump(mean, f)
+
             print(dataset, "ok")
 
 
