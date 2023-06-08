@@ -41,16 +41,16 @@ def main(args):
             checkpointer = DetectionCheckpointer(resnet)
             checkpointer.load(cfg.MODEL.WEIGHTS)
 
-            batch_mean = []
+            batch_list = []
             with torch.no_grad():
                 dataloader_iteration = iter(dataloader)
                 for i in range(dataset_size):
                     data = next(dataloader_iteration)
                     outputs = resnet(data)
-                    batch_mean.append(outputs)
+                    batch_list.append(outputs)
 
-                batch_mean = torch.cat(batch_mean).mean(0)
-                batch_std = torch.cat(batch_mean).std(0)
+                batch_mean = torch.cat(batch_list).mean(0)
+                batch_std = torch.cat(batch_list).std(0)
                 save_path = os.path.join(args.save_path, dataset)
 
                 if not os.path.exists(save_path):
