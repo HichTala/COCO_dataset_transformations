@@ -56,7 +56,6 @@ def main(args):
 
                 for class_id in class_mean.keys():
                     mean = torch.cat(class_mean[class_id]).mean(0)
-                    breakpoint()
                     std = torch.cat(class_mean[class_id]).std(0)
                     save_folder = os.path.join(args.save_path, dataset)
                     save_path = os.path.join(args.save_path, dataset, str(class_id))
