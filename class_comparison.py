@@ -37,7 +37,7 @@ def main(args):
 
             dataset_size = len(dataloader.dataset.dataset.dataset)
 
-            cfg.MODEL.WEIGHTS = "detectron2://backbone_cross_domain/model_final_721ade.pkl"
+            # cfg.MODEL.WEIGHTS = "detectron2://backbone_cross_domain/model_final_721ade.pkl"
             checkpointer = DetectionCheckpointer(pool)
             checkpointer.load(cfg.MODEL.WEIGHTS)
 
@@ -52,10 +52,11 @@ def main(args):
                         for class_id, box in zip(target_classe, box_features):
                             if class_id.item() not in class_mean:
                                 class_mean[class_id.item()] = []
-                            class_mean[class_id.item()].append(box)
+                            class_mean[class_id.item()].append(box.unsqueeze(dim=0))
 
                 for class_id in class_mean.keys():
                     mean = torch.cat(class_mean[class_id]).mean(0)
+                    breakpoint()
                     std = torch.cat(class_mean[class_id]).std(0)
                     save_folder = os.path.join(args.save_path, dataset)
                     save_path = os.path.join(args.save_path, dataset, str(class_id))
