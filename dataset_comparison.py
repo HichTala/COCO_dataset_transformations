@@ -37,7 +37,7 @@ def main(args):
 
             dataset_size = len(dataloader.dataset.dataset.dataset)
 
-            # cfg.MODEL.WEIGHTS = "detectron2://backbone_cross_domain/model_final_721ade.pkl"
+            cfg.MODEL.WEIGHTS = "detectron2://backbone_cross_domain/model_final_721ade.pkl"
             checkpointer = DetectionCheckpointer(resnet)
             checkpointer.load(cfg.MODEL.WEIGHTS)
 
@@ -50,13 +50,13 @@ def main(args):
                     batch_list.append(outputs)
 
                 batch_mean = torch.cat(batch_list).mean(0)
-                batch_std = torch.cat(batch_list).std(0)
+                cov_matrix = torch.cov(torch.cat(batch_list).t())
                 save_path = os.path.join(args.save_path, dataset)
 
                 with open(save_path + '_mean.pkl', 'wb') as f:
                     pickle.dump(batch_mean, f)
                 with open(save_path + '_std.pkl', 'wb') as f:
-                    pickle.dump(batch_std, f)
+                    pickle.dump(cov_matrix, f)
 
             print(dataset, "ok")
 
