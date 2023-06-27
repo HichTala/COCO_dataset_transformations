@@ -56,7 +56,7 @@ def main(args):
 
                 for class_id in class_mean.keys():
                     mean = torch.cat(class_mean[class_id]).mean(0)
-                    std = torch.cat(class_mean[class_id]).std(0)
+                    cov_matrix = torch.cov(torch.cat(class_mean[class_id]).t())
                     save_folder = os.path.join(args.save_path, dataset)
                     save_path = os.path.join(args.save_path, dataset, str(class_id))
 
@@ -65,8 +65,8 @@ def main(args):
 
                     with open(save_path + '_mean.pkl', 'wb') as f:
                         pickle.dump(mean, f)
-                    with open(save_path + '_std.pkl', 'wb') as f:
-                        pickle.dump(std, f)
+                    with open(save_path + '_cov.pkl', 'wb') as f:
+                        pickle.dump(cov_matrix, f)
 
             print(dataset, "ok")
 
