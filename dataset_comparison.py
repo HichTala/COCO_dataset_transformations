@@ -53,6 +53,9 @@ def main(args):
                 cov_matrix = torch.cov(torch.cat(batch_list).t())
                 save_path = os.path.join(args.save_path, dataset)
 
+                if not os.path.exists(args.save_path):
+                    os.makedirs(args.save_path)
+
                 with open(save_path + '_mean.pkl', 'wb') as f:
                     pickle.dump(batch_mean, f)
                 with open(save_path + '_std.pkl', 'wb') as f:
