@@ -3,6 +3,8 @@ import torch.nn as nn
 from detectron2.modeling import build_backbone
 from detectron2.structures import ImageList
 
+from resnet_detectron import BottleneckBlock
+
 
 class ResNet(nn.Module):
     def __init__(self, cfg):
@@ -14,6 +16,14 @@ class ResNet(nn.Module):
         self.pixel_std = torch.Tensor(cfg.MODEL.PIXEL_STD).to(self.device).view(3, 1, 1)
 
         self.backbone = build_backbone(cfg)
+        block = BottleneckBlock(1024, 1024,
+                                stride=1,
+                                norm='FrozenBN',
+                                bottleneck_channels=256,
+                                stride_in_1x1=True,
+                                dilation=1,
+                                num_groups=1)
+        self.backbone.res4[5] = block
         self.avgpool = nn.AdaptiveAvgPool2d(output_size=(1, 1))
 
     def forward(self, batched_inputs):
