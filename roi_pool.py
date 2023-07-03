@@ -7,6 +7,8 @@ from detectron2.modeling.poolers import ROIPooler
 from detectron2.structures import ImageList, Instances
 from detectron2.modeling import build_backbone
 
+from resnet_detectron import BottleneckBlock
+
 logger = logging.getLogger(__name__)
 
 
@@ -21,7 +23,14 @@ class ResNetROIPool(nn.Module):
         self.pixel_std = torch.Tensor(cfg.MODEL.PIXEL_STD).to(self.device).view(3, 1, 1)
 
         self.backbone = build_backbone(cfg)
-        self.avgpool = nn.AdaptiveAvgPool2d(output_size=(1, 1))
+        block = BottleneckBlock(1024, 1024,
+                                stride=1,
+                                norm='FrozenBN',
+                                bottleneck_channels=256,
+                                stride_in_1x1=True,
+                                dilation=1,
+                                num_groups=1)
+        self.backbone.res4[5] = block
 
         self.in_features = cfg.MODEL.ROI_HEADS.IN_FEATURES
         self.avgpool = nn.AdaptiveAvgPool2d(output_size=(1, 1))
