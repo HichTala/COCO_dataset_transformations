@@ -86,7 +86,7 @@ def main(args):
                 sum_matrix1 = torch.cat(class_mean1[class_id1]).sum(0)
                 sum_matrix2 = torch.cat(class_mean2[class_id2]).sum(0)
 
-                cov_matrix = ((sum_matrix1 - dataset_size1 * mean1).t() @ (sum_matrix2 - dataset_size2 * mean2)) / (dataset_size1 * dataset_size2)
+                cov_matrix = ((sum_matrix1 - dataset_size1 * mean1) @ (sum_matrix2 - dataset_size2 * mean2).t()) / (dataset_size1 * dataset_size2)
 
                 save_folder = os.path.join(args.save_path, dataset1 + "x" + dataset2)
                 save_path = os.path.join(args.save_path, dataset1 + "x" + dataset2,
