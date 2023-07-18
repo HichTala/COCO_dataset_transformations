@@ -64,7 +64,7 @@ def main(args):
                 for class_id, box in zip(target_classe, box_features):
                     if class_id.item() not in class_mean1:
                         class_mean1[class_id.item()] = []
-                    class_mean1[class_id.item()].append(box.unsqueeze(dim=0))
+                    class_mean1[class_id.item()].append(box.unsqueeze(dim=0).type(torch.float64))
 
         dataloader_iteration2 = iter(dataloader2)
         for i in range(dataset_size2):
@@ -75,7 +75,7 @@ def main(args):
                 for class_id, box in zip(target_classe, box_features):
                     if class_id.item() not in class_mean2:
                         class_mean2[class_id.item()] = []
-                    class_mean2[class_id.item()].append(box.unsqueeze(dim=0))
+                    class_mean2[class_id.item()].append(box.unsqueeze(dim=0).type(torch.float64))
 
         for class_id1 in class_mean1.keys():
             mean1 = torch.cat(class_mean1[class_id1]).mean(0)
