@@ -90,7 +90,7 @@ def main(args):
 
                 save_folder = os.path.join(args.save_path, dataset1 + "x" + dataset2)
                 save_path = os.path.join(args.save_path, dataset1 + "x" + dataset2,
-                                         dataset1 + str(class_id1) + "x" + dataset2 + str(class_id1))
+                                         dataset1 + str(class_id1) + "x" + dataset2 + str(class_id2))
 
                 if not os.path.exists(save_folder):
                     os.makedirs(save_folder)
