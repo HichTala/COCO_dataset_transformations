@@ -7,7 +7,7 @@ from detectron2.modeling.poolers import ROIPooler
 from detectron2.structures import ImageList, Instances
 from detectron2.modeling import build_backbone
 
-from resnet_detectron import BottleneckBlock
+from bottleneckblock_wo_relu import BottleneckBlock
 
 logger = logging.getLogger(__name__)
 

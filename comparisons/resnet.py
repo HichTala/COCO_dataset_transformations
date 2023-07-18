@@ -3,7 +3,7 @@ import torch.nn as nn
 from detectron2.modeling import build_backbone
 from detectron2.structures import ImageList
 
-from resnet_detectron import BottleneckBlock
+from bottleneckblock_wo_relu import BottleneckBlock
 
 
 class ResNet(nn.Module):

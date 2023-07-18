@@ -7,7 +7,7 @@ from detectron2.checkpoint import DetectionCheckpointer
 from detectron2.config import get_cfg
 from detectron2.data import build_detection_train_loader
 
-from resnet import ResNet
+from comparisons.resnet_roi_pool import ResNetROIPool
 from super_pycocotools.detectron import register
 
 
@@ -33,33 +33,40 @@ def main(args):
             cfg.SOLVER.IMS_PER_BATCH = batch_size
 
             dataloader = build_detection_train_loader(cfg)
-            resnet = ResNet(cfg).cuda()
+            pool = ResNetROIPool(cfg).cuda()
 
             dataset_size = len(dataloader.dataset.dataset.dataset)
 
             cfg.MODEL.WEIGHTS = "detectron2://backbone_cross_domain/model_final_721ade.pkl"
-            checkpointer = DetectionCheckpointer(resnet)
+            checkpointer = DetectionCheckpointer(pool)
             checkpointer.load(cfg.MODEL.WEIGHTS)
 
-            batch_list = []
+            class_mean = {}
             with torch.no_grad():
                 dataloader_iteration = iter(dataloader)
                 for i in range(dataset_size):
                     data = next(dataloader_iteration)
-                    outputs = resnet(data)
-                    batch_list.append(outputs)
+                    box_features, target_classes = pool(data)
 
-                batch_mean = torch.cat(batch_list).mean(0)
-                cov_matrix = torch.cov(torch.cat(batch_list).t())
-                save_path = os.path.join(args.save_path, dataset)
+                    for target_classe in target_classes:
+                        for class_id, box in zip(target_classe, box_features):
+                            if class_id.item() not in class_mean:
+                                class_mean[class_id.item()] = []
+                            class_mean[class_id.item()].append(box.unsqueeze(dim=0))
 
-                if not os.path.exists(args.save_path):
-                    os.makedirs(args.save_path)
+                for class_id in class_mean.keys():
+                    mean = torch.cat(class_mean[class_id]).mean(0)
+                    cov_matrix = torch.cov(torch.cat(class_mean[class_id]).t())
+                    save_folder = os.path.join(args.save_path, dataset)
+                    save_path = os.path.join(args.save_path, dataset, str(class_id))
 
-                with open(save_path + '_mean.pkl', 'wb') as f:
-                    pickle.dump(batch_mean, f)
-                with open(save_path + '_std.pkl', 'wb') as f:
-                    pickle.dump(cov_matrix, f)
+                    if not os.path.exists(save_folder):
+                        os.makedirs(save_folder)
+
+                    with open(save_path + '_mean.pkl', 'wb') as f:
+                        pickle.dump(mean, f)
+                    with open(save_path + '_cov.pkl', 'wb') as f:
+                        pickle.dump(cov_matrix, f)
 
             print(dataset, "ok")
 
