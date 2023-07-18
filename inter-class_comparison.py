@@ -84,7 +84,7 @@ def main(args):
                 mean2 = torch.cat(class_mean2[class_id2]).mean(0)
 
                 sum_matrix1 = torch.cat(class_mean1[class_id1]).sum(0)
-                sum_matrix2 = torch.cat(class_mean2[class_id1]).sum(0)
+                sum_matrix2 = torch.cat(class_mean2[class_id2]).sum(0)
 
                 cov_matrix = ((sum_matrix1 - dataset_size1 * mean1).t() @ (sum_matrix2 - dataset_size2 * mean2)) / (dataset_size1 * dataset_size2)
 
