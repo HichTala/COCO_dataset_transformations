@@ -76,7 +76,7 @@ def main(args):
                     if class_id.item() not in class_mean2:
                         class_mean2[class_id.item()] = []
                     class_mean2[class_id.item()].append(box.unsqueeze(dim=0))
-
+        trace_cov = []
         for class_id1 in class_mean1.keys():
             mean1 = torch.cat(class_mean1[class_id1]).mean(0)
 
@@ -86,7 +86,7 @@ def main(args):
                 sum_matrix1 = torch.cat(class_mean1[class_id1]).sum(0)
                 sum_matrix2 = torch.cat(class_mean2[class_id2]).sum(0)
 
-                cov_matrix = ((sum_matrix1 - dataset_size1 * mean1) @ (sum_matrix2 - dataset_size2 * mean2).t()) / (dataset_size1 * dataset_size2)
+                trace_cov.append(((sum_matrix1 - dataset_size1 * mean1).t() @ (sum_matrix2 - dataset_size2 * mean2)) / (dataset_size1 * dataset_size2))
 
                 save_folder = os.path.join(args.save_path, dataset1 + "x" + dataset2)
                 save_path = os.path.join(args.save_path, dataset1 + "x" + dataset2,
@@ -98,7 +98,7 @@ def main(args):
             # with open(save_path + '_mean.pkl', 'wb') as f:
             #     pickle.dump(mean, f)
                 with open(save_path + '_cov.pkl', 'wb') as f:
-                    pickle.dump(cov_matrix, f)
+                    pickle.dump(trace_cov, f)
 
             # print(dataset, "ok")
 
