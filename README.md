@@ -24,6 +24,6 @@ Exemple:
 python inter-class_comparison.py datasets.json DIOR_train DOTA_train --save_path ./class_barycenter
 ```
 
-$\frac{1}{|I{c}||I{c'}|} \sum{i \in I{c}, j \in I{c'}} [(\phi{c}^{i}-\mu{c})^\intercal (\phi{c'}^{j}-\mu{c'})]$
+$\frac{1}{|I{c}||I{c'}|} \sum{i \in I{c}, j \in I{c'}} (\phi_{c}^{i}-\mu{c})^\intercal (\phi_{c'}^{j}-\mu{c'})$
 
 _Calcule un scalaire par couple de classes_
