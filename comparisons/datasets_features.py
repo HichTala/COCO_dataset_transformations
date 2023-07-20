@@ -7,7 +7,7 @@ from detectron2.checkpoint import DetectionCheckpointer
 from detectron2.config import get_cfg
 from detectron2.data import build_detection_train_loader
 
-from comparisons.resnet import ResNet
+from resnet import ResNet
 from super_pycocotools.detectron import register
 
 
