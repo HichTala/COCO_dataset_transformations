@@ -78,13 +78,13 @@ def main(args):
                     class_mean2[class_id.item()].append(box.unsqueeze(dim=0).type(torch.float64))
 
         for class_id1 in class_mean1.keys():
-            mean1 = torch.cat(class_mean1[class_id1]).mean(0)
+            mean1 = torch.cat(class_mean1[class_id1][:10]).mean(0)
 
             for class_id2 in class_mean2.keys():
-                mean2 = torch.cat(class_mean2[class_id2]).mean(0)
+                mean2 = torch.cat(class_mean2[class_id2][:10]).mean(0)
 
-                sum_matrix1 = torch.cat(class_mean1[class_id1]).sum(0)
-                sum_matrix2 = torch.cat(class_mean2[class_id2]).sum(0)
+                sum_matrix1 = torch.cat(class_mean1[class_id1][:10]).sum(0)
+                sum_matrix2 = torch.cat(class_mean2[class_id2][:10]).sum(0)
 
                 cov_matrix = ((sum_matrix1 - dataset_size1 * mean1).t() @ (sum_matrix2 - dataset_size2 * mean2)) / (dataset_size1 * dataset_size2)
 
