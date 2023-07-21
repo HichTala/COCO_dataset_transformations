@@ -61,7 +61,7 @@ def main(args):
 
                 batch_mean = torch.cat(batch_list).mean(0)
                 save_path = os.path.join(args.save_path, dataset, 'mean.pkl')
-                with open(save_path + '_mean.pkl', 'wb') as f:
+                with open(save_path, 'wb') as f:
                     pickle.dump(batch_mean, f)
 
             print(dataset, "ok")
