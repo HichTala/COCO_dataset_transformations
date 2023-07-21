@@ -95,7 +95,7 @@ def main(args):
                 features1 = torch.cat(class_mean1[class_id1][:n]) - mean1
                 features2 = torch.cat(class_mean1[class_id1][:n]) - mean2
 
-                cov_matrix = torch.trace(features1 @ features2.t()) / n
+                cov_matrix = torch.trace((features1/torch.linalg.norm(features1)) @ (features2/torch.linalg.norm(features2)).t()) / n
 
                 # cov_matrix = ((sum_matrix1 - nb_annotation1[class_id1] * mean1).t() @ (sum_matrix2 - nb_annotation2[class_id2] * mean2)) / (nb_annotation1[class_id1] * nb_annotation2[class_id2])
 
