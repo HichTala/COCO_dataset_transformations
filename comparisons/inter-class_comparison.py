@@ -45,6 +45,9 @@ def main(args):
     dataset_size1 = len(dataloader1.dataset.dataset.dataset)
     dataset_size2 = len(dataloader2.dataset.dataset.dataset)
 
+    nb_annotation1 = {}
+    nb_annotation2 = {}
+
     cfg1.MODEL.WEIGHTS = "detectron2://backbone_cross_domain/model_final_721ade.pkl"
     cfg2.MODEL.WEIGHTS = "detectron2://backbone_cross_domain/model_final_721ade.pkl"
     checkpointer1 = DetectionCheckpointer(pool)
@@ -64,7 +67,9 @@ def main(args):
                 for class_id, box in zip(target_classe, box_features):
                     if class_id.item() not in class_mean1:
                         class_mean1[class_id.item()] = []
+                        nb_annotation1[class_id.item()] = 0
                     class_mean1[class_id.item()].append(box.unsqueeze(dim=0).type(torch.float64))
+                    nb_annotation1[class_id.item()] += 1
 
         dataloader_iteration2 = iter(dataloader2)
         for i in range(dataset_size2):
@@ -75,18 +80,20 @@ def main(args):
                 for class_id, box in zip(target_classe, box_features):
                     if class_id.item() not in class_mean2:
                         class_mean2[class_id.item()] = []
+                        nb_annotation2[class_id.item()] = 0
                     class_mean2[class_id.item()].append(box.unsqueeze(dim=0).type(torch.float64))
+                    nb_annotation2[class_id.item()] += 1
 
         for class_id1 in class_mean1.keys():
-            mean1 = torch.cat(class_mean1[class_id1][:10]).mean(0)
+            mean1 = torch.cat(class_mean1[class_id1]).mean(0)
 
             for class_id2 in class_mean2.keys():
-                mean2 = torch.cat(class_mean2[class_id2][:10]).mean(0)
+                mean2 = torch.cat(class_mean2[class_id2]).mean(0)
 
-                sum_matrix1 = torch.cat(class_mean1[class_id1][:10]).sum(0)
-                sum_matrix2 = torch.cat(class_mean2[class_id2][:10]).sum(0)
+                sum_matrix1 = torch.cat(class_mean1[class_id1]).sum(0)
+                sum_matrix2 = torch.cat(class_mean2[class_id2]).sum(0)
 
-                cov_matrix = ((sum_matrix1 - dataset_size1 * mean1).t() @ (sum_matrix2 - dataset_size2 * mean2)) / (dataset_size1 * dataset_size2)
+                cov_matrix = ((sum_matrix1 - nb_annotation1[class_id1] * mean1).t() @ (sum_matrix2 - nb_annotation2[class_id2] * mean2)) / (nb_annotation1[class_id1] * nb_annotation2[class_id2])
 
                 save_folder = os.path.join(args.save_path, dataset1 + "x" + dataset2)
                 save_path = os.path.join(args.save_path, dataset1 + "x" + dataset2,
