@@ -90,10 +90,14 @@ def main(args):
             for class_id2 in class_mean2.keys():
                 mean2 = torch.cat(class_mean2[class_id2]).mean(0)
 
-                sum_matrix1 = torch.cat(class_mean1[class_id1]).sum(0)
-                sum_matrix2 = torch.cat(class_mean2[class_id2]).sum(0)
+                n = min(len(class_mean1[class_id1]), len(class_mean2[class_id2]))
 
-                cov_matrix = ((sum_matrix1 - nb_annotation1[class_id1] * mean1).t() @ (sum_matrix2 - nb_annotation2[class_id2] * mean2)) / (nb_annotation1[class_id1] * nb_annotation2[class_id2])
+                features1 = torch.cat(class_mean1[class_id1][:n]) - mean1
+                features2 = torch.cat(class_mean1[class_id1][:n]) - mean2
+
+                cov_matrix = torch.trace(features1 @ features2.t())
+
+                # cov_matrix = ((sum_matrix1 - nb_annotation1[class_id1] * mean1).t() @ (sum_matrix2 - nb_annotation2[class_id2] * mean2)) / (nb_annotation1[class_id1] * nb_annotation2[class_id2])
 
                 save_folder = os.path.join(args.save_path, dataset1 + "x" + dataset2)
                 save_path = os.path.join(args.save_path, dataset1 + "x" + dataset2,
