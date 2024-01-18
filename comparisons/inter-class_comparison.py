@@ -50,6 +50,8 @@ def main(args):
 
     cfg1.MODEL.WEIGHTS = "detectron2://backbone_cross_domain/model_final_721ade.pkl"
     cfg2.MODEL.WEIGHTS = "detectron2://backbone_cross_domain/model_final_721ade.pkl"
+    # cfg1.MODEL.WEIGHTS = "detectron2://ImageNetPretrained/MSRA/R-50.pkl"
+    # cfg2.MODEL.WEIGHTS = "detectron2://ImageNetPretrained/MSRA/R-50.pkl"
     checkpointer1 = DetectionCheckpointer(pool)
     checkpointer2 = DetectionCheckpointer(pool)
     checkpointer1.load(cfg1.MODEL.WEIGHTS)
@@ -70,8 +72,8 @@ def main(args):
                         nb_annotation1[class_id.item()] = 0
                     class_mean1[class_id.item()].append(box.unsqueeze(dim=0).type(torch.float64))
                     nb_annotation1[class_id.item()] += 1
-
         dataloader_iteration2 = iter(dataloader2)
+        
         for i in range(dataset_size2):
             data = next(dataloader_iteration2)
             box_features, target_classes = pool(data)
@@ -98,6 +100,7 @@ def main(args):
                 cov_matrix = torch.trace((features1/features1.norm(dim=1)[:, None]) @ (features2/features2.norm(dim=1)[:, None]).t()) / n
 
                 # cov_matrix = ((sum_matrix1 - nb_annotation1[class_id1] * mean1).t() @ (sum_matrix2 - nb_annotation2[class_id2] * mean2)) / (nb_annotation1[class_id1] * nb_annotation2[class_id2])
+
 
                 save_folder = os.path.join(args.save_path, dataset1 + "x" + dataset2)
                 save_path = os.path.join(args.save_path, dataset1 + "x" + dataset2,
