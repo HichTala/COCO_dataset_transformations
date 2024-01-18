@@ -6,6 +6,7 @@ import torch
 from detectron2.checkpoint import DetectionCheckpointer
 from detectron2.config import get_cfg
 from detectron2.data import build_detection_train_loader
+from tqdm import tqdm
 
 from resnet_roi_pool import ResNetROIPool
 from super_pycocotools.detectron import register
@@ -44,7 +45,7 @@ def main(args):
             class_mean = {}
             with torch.no_grad():
                 dataloader_iteration = iter(dataloader)
-                for i in range(dataset_size):
+                for i in tqdm(range(dataset_size), desc="Calculating mean", colour='cyan'):
                     data = next(dataloader_iteration)
                     box_features, target_classes = pool(data)
 
@@ -64,7 +65,7 @@ def main(args):
                     if not os.path.exists(save_class_path):
                         os.makedirs(save_class_path)
 
-                    for i in range(len(class_mean[class_id][:10])):
+                    for i in tqdm(range(len(class_mean[class_id][:10])), desc=f"Processing class {class_id}", colour='green'):
                         save_path = os.path.join(args.save_path, dataset, str(class_id), str(i) + '.pkl')
                         with open(save_path, 'wb') as f:
                             pickle.dump(class_mean[class_id][i], f)
