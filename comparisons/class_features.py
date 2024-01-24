@@ -45,7 +45,7 @@ def main(args):
             class_mean = {}
             with torch.no_grad():
                 dataloader_iteration = iter(dataloader)
-                for i in tqdm(range(dataset_size), desc="Calculating mean", colour='cyan'):
+                for _ in tqdm(range(dataset_size), desc="Calculating mean", colour='cyan'):
                     data = next(dataloader_iteration)
                     box_features, target_classes = pool(data)
 
@@ -56,6 +56,7 @@ def main(args):
                             class_mean[class_id.item()].append(box.unsqueeze(dim=0))
 
                 for class_id in class_mean.keys():
+                    print(f"Processing class {class_id}", end='\r')
                     save_folder = os.path.join(args.save_path, dataset)
                     save_class_path = os.path.join(args.save_path, dataset, str(class_id))
 
@@ -65,10 +66,11 @@ def main(args):
                     if not os.path.exists(save_class_path):
                         os.makedirs(save_class_path)
 
-                    for i in tqdm(range(len(class_mean[class_id][:10])), desc=f"Processing class {class_id}", colour='green'):
-                        save_path = os.path.join(args.save_path, dataset, str(class_id), str(i) + '.pkl')
-                        with open(save_path, 'wb') as f:
-                            pickle.dump(class_mean[class_id][i], f)
+                    # for i in tqdm(range(len(class_mean[class_id][:10])), desc=f"Processing class {class_id}", colour='green'):
+                    save_path = os.path.join(args.save_path, dataset, str(class_id) + '.pth')
+                    torch.save(class_mean[class_id], save_path)
+                    # with open(save_path, 'wb') as f:
+                    #     pickle.dump(class_mean[class_id], f)
 
                     save_path_mean = os.path.join(args.save_path, dataset, str(class_id), 'mean.pkl')
 
