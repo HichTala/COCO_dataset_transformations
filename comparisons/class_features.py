@@ -38,7 +38,8 @@ def main(args):
 
             dataset_size = len(dataloader.dataset.dataset.dataset)
 
-            cfg.MODEL.WEIGHTS = "detectron2://backbone_cross_domain/model_final_721ade.pkl"
+            # cfg.MODEL.WEIGHTS = "detectron2://backbone_cross_domain/model_final_721ade.pkl"
+            cfg.MODEL.WEIGHTS = "./model_final_721ade.pkl"
             checkpointer = DetectionCheckpointer(pool)
             checkpointer.load(cfg.MODEL.WEIGHTS)
 
