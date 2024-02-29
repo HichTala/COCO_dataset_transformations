@@ -44,6 +44,7 @@ for dataset in datasets:
 
     plt.bar(concentration_dict.keys(), concentration_dict.values())
     plt.savefig("../figures/barplot_{dataset}.png".format(dataset=dataset))
+    plt.clf()
 
     distances = np.zeros((len(classes), len(classes)))
     for ci in classes:
@@ -63,6 +64,7 @@ for dataset in datasets:
              rotation_mode="anchor")
 
     plt.savefig("../figures/heatmap_{dataset}.png".format(dataset=dataset))
+    plt.clf()
 
     clustering_matrix = np.zeros((len(classes), len(classes)))
     for ci in classes:
@@ -78,6 +80,7 @@ for dataset in datasets:
         clustering[c] = max(clustering_matrix[int(c)])
     plt.bar(clustering.keys(), clustering.values())
     plt.savefig("../figures/clustering_{dataset}.png".format(dataset=dataset))
+    plt.clf()
 
     db = np.array(list(clustering.values())).sum() / len(classes)
     print(dataset, db)
