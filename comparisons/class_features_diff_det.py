@@ -26,7 +26,6 @@ def parse_command_line():
     parser.add_argument('--name', type=int)
     parser.add_argument('--weights', type=str)
     parser.add_argument('--save-path', type=str)
-    parser.add_argument('--dataset', type=str)
 
     return parser.parse_args()
 
