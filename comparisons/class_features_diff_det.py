@@ -125,8 +125,8 @@ def main(args):
 
         for class_id in class_mean.keys():
             print(f"Processing class {class_id}", end='\r')
-            save_folder = os.path.join(args.save_path, args.dataset)
-            save_class_path = os.path.join(args.save_path, args.dataset, str(class_id))
+            save_folder = os.path.join(args.save_path, args.name)
+            save_class_path = os.path.join(args.save_path, args.name, str(class_id))
 
             if not os.path.exists(save_folder):
                 os.makedirs(save_folder)
@@ -135,12 +135,12 @@ def main(args):
                 os.makedirs(save_class_path)
 
             # for i in tqdm(range(len(class_mean[class_id][:10])), desc=f"Processing class {class_id}", colour='green'):
-            save_path = os.path.join(args.save_path, args.dataset, str(class_id), 'features.pth')
+            save_path = os.path.join(args.save_path, args.name, str(class_id), 'features.pth')
             torch.save(class_mean[class_id], save_path)
             # with open(save_path, 'wb') as f:
             #     pickle.dump(class_mean[class_id], f)
 
-            save_path_mean = os.path.join(args.save_path, args.dataset, str(class_id), 'mean.pth')
+            save_path_mean = os.path.join(args.save_path, args.name, str(class_id), 'mean.pth')
 
             mean = torch.cat(class_mean[class_id]).mean(0)
             torch.save(mean, save_path_mean)
