@@ -111,6 +111,14 @@ class DiffDetResNetROIPool(nn.Module):
         targets = [x["instances"].to(self.device) for x in batched_inputs]
 
         features = self.backbone(images.tensor)
+        block = BottleneckBlock(2048, 2048,
+                                stride=1,
+                                norm='FrozenBN',
+                                bottleneck_channels=512,
+                                stride_in_1x1=True,
+                                dilation=1,
+                                num_groups=1)
+        self.backbone.bottom_up.res5[2] = block
 
         target_classes = [x.gt_classes for x in targets]
         target_boxes = [x.gt_boxes for x in targets]
